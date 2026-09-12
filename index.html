@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formula Recap | Ultimate F1 Hub & Telemetry</title>
+    <style>
+        :root {
+            --f1-red: #e10600;
+            --f1-black: #15151e;
+            --f1-dark-card: #1f1f27;
+            --f1-light-card: #2a2a35;
+            --f1-text: #f1f1f1;
+            --f1-subtext: #a0a0b0;
+            --f1-gold: #ffb800;
+            --soft-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--f1-black);
+            color: var(--f1-text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Bar & Navigation */
+        header {
+            background-color: #000;
+            border-bottom: 3px solid var(--f1-red);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .brand {
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            color: #fff;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand span {
+            color: var(--f1-red);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            list-style: none;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 5px 0;
+        }
+
+        .nav-links button {
+            background: transparent;
+            border: none;
+            color: var(--f1-subtext);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .nav-links button.active, .nav-links button:hover {
+            color: #fff;
+            background-color: var(--f1-light-card);
+        }
+
+        .badge-pro {
+            background: linear-gradient(135deg, var(--f1-gold), #ff8800);
+            color: #000;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Broadcast Notice Banner */
+        .f1tv-disclaimer {
+            background: #111;
+            border-bottom: 1px solid var(--soft-border);
+            text-align: center;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            color: var(--f1-subtext);
+        }
+
+        .f1tv-disclaimer a {
+            color: var(--f1-red);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Main Responsive Container */
+        main {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive Layouts */
+        .grid-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--f1-dark-card);
+            border: 1px solid var(--soft-border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--soft-border);
+            padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--soft-border);
+        }
+
+        th {
+            color: var(--f1-subtext);
+            font-weight: 600;
+        }
+
+        /* GPS Track Canvas */
+        #gpsTrackCanvas {
+            width: 100%;
+            height: 320px;
+            background-color: #0d0d12;
+            border-radius: 6px;
+        }
+
+        /* Telemetry Graph Visualizer */
+        .telemetry-trace {
+            width: 100%;
+            height: 120px;
+            background: #0d0d12;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        /* Compound Pills */
+        .compound-pill {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            color: #000;
+        }
+        .soft { background-color: #ff2a2a; color: #fff; }
+        .medium { background-color: #ffd000; }
+        .hard { background-color: #ffffff; }
+
+        /* Lock Overlay for Pro Content */
+        .pro-gate {
+            position: relative;
+            overflow: hidden;
+        }
+        .pro-gate-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(21, 21, 30, 0.88);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+            z-index: 10;
+        }
+        .btn-upgrade {
+            background: var(--f1-red);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            main {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="navbar">
+            <div class="brand">Formula <span>Recap</span></div>
+            <ul class="nav-links">
+                <li><button class="tab-btn active" onclick="switchTab('hub')">Race Hub</button></li>
+                <li><button class="tab-btn" onclick="switchTab('standings')">Standings</button></li>
+                <li><button class="tab-btn" onclick="switchTab('telemetry')">Pro Telemetry <span class="badge-pro">PRO</span></button></li>
+                <li><button class="tab-btn" onclick="switchTab('fantasy')">F1 Fantasy</button></li>
+                <li><button class="tab-btn" onclick="switchTab('fanguide')">At-Track Guide</button></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- F1 TV Video Streaming Clarification Banner -->
+    <div class="f1tv-disclaimer">
+        ℹ️ Live timing & telemetry powered by Formula Recap. <strong>Live video streaming & onboard feeds</strong> require the official <a href="#" onclick="alert('Redirecting to official F1 TV App store...'); return false;">F1 TV App</a>.
+    </div>
+
+    <!-- Main Content Area -->
+    <main>
+
+        <!-- TAB 1: FREE RACE HUB -->
+        <section id="hub" class="tab-content active">
+            <div class="grid-dashboard">
+                <!-- Live Leaderboard -->
+                <div class="card">
+                    <h3>Live Leaderboard <span>LAP 42/57</span></h3>
+                    <table>
+                        <thead>
+                            <tr><th>Pos</th><th>Driver</th><th>Gap</th><th>Tyre</th></tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                            <tr><td>1</td><td><strong>VER</strong> #1</td><td>LEADER</td><td><span class="compound-pill medium">M</span></td></tr>
+                            <tr><td>2</td><td><strong>NOR</strong> #4</td><td>+2.418s</td><td><span class="compound-pill hard">H</span></td></tr>
+                            <tr><td>3</td><td><strong>LEC</strong> #16</td><td>+5.892s</td><td><span class="compound-pill hard">H</span></td></tr>
+                            <tr><td>4</td><td><strong>PIA</strong> #81</td><td>+8.105s</td><td><span class="compound-pill medium">M</span></td></tr>
+                            <tr><td>5</td><td><strong>HAM</strong> #44</td><td>+14.330s</td><td><span class="compound-pill soft">S</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Localized Timetable -->
+                <div class="card">
+                    <h3>Local Weekend Schedule</h3>
+                    <p style="font-size:0.8rem; color:var(--f1-subtext); margin-bottom:10px;">Timezone automatically adjusted to your local device clock.</p>
+                    <table id="schedule-table">
+                        <!-- Populated by JS -->
+                    </table>
+                </div>
+
+                <!-- Latest News & Technical Analysis -->
+                <div class="card">
+                    <h3>Technical Analysis & News</h3>
+                    <ul style="list-style:none; line-height: 1.6;">
+                        <li style="margin-bottom:10px;">
+                            <strong>Aero Analysis:</strong> Rear-wing updates evaluated for high-altitude downforce demands.
+                        </li>
+                        <li style="margin-bottom:10px;">
+                            <strong>Tyre Wear Note:</strong> Thermal degradation on Turn 3 exit proving critical for 2-stop strategies.
+                        </li>
+                        <li>
+                            <strong>Highlights:</strong> Watch official qualifying recap reels on the video feed.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: CHAMPIONSHIP STANDINGS -->
+        <section id="standings" class="tab-content">
+            <div class="grid-dashboard">
+                <div class="card">
+                    <h3>Driver Standings</h3>
+                    <table>
+                        <thead><tr><th>Pos</th><th>Driver</th><th>Team</th><th>Pts</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Max Verstappen</td><td>Red Bull Racing</td><td>255</td></tr>
+                            <tr><td>2</td><td>Lando Norris</td><td>McLaren</td><td>218</td></tr>
+                            <tr><td>3</td><td>Charles Leclerc</td><td>Ferrari</td><td>195</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>Constructor Standings</h3>
+                    <table>
+                        <thead><tr><th>Pos</th><th>Team</th><th>Pts</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Red Bull Racing</td><td>380</td></tr>
+                            <tr><td>2</td><td>McLaren</td><td>368</td></tr>
+                            <tr><td>3</td><td>Ferrari</td><td>340</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: PRO TELEMETRY HUB (Paid Tier Access) -->
+        <section id="telemetry" class="tab-content">
+            <div class="grid-dashboard">
+                
+                <!-- 2D GPS Driver Tracker Canvas -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Real-Time 2D GPS Driver Tracker Map <span class="badge-pro">PRO</span></h3>
+                    <canvas id="gpsTrackCanvas"></canvas>
+                </div>
+
+                <!-- Live Speed & Throttle Telemetry Trace -->
+                <div class="card">
+                    <h3>Driver Speed & Throttle Trace</h3>
+                    <p style="font-size: 0.8rem; color: var(--f1-subtext);">Driver: VER (#1) vs NOR (#4)</p>
+                    <svg class="telemetry-trace" id="speedTrace">
+                        <path d="M 0 80 Q 50 10, 100 90 T 200 20 T 300 100" fill="none" stroke="#e10600" stroke-width="2"/>
+                        <path d="M 0 70 Q 50 20, 100 80 T 200 40 T 300 90" fill="none" stroke="#ffb800" stroke-width="2" stroke-dasharray="4"/>
+                    </svg>
+                    <div style="font-size: 0.75rem; display: flex; gap: 10px; margin-top: 5px;">
+                        <span style="color:#e10600;">■ VER Throttle</span>
+                        <span style="color:#ffb800;">■ NOR Throttle</span>
+                    </div>
+                </div>
+
+                <!-- Sector-by-Sector Comparison & Unedited Team Radio -->
+                <div class="card">
+                    <h3>Unedited Team Radio Feed</h3>
+                    <div style="background:#111; padding:10px; border-radius:4px; font-size:0.85rem; margin-bottom: 10px;">
+                        <span style="color:var(--f1-gold);">📻 [Radio 14:32:01] HAM:</span> "Tires are beginning to drop off in sector 2."
+                    </div>
+                    <div style="background:#111; padding:10px; border-radius:4px; font-size:0.85rem;">
+                        <span style="color:var(--f1-gold);">📻 [Radio 14:33:15] PIT to NOR:</span> "Box this lap, stay clear of the pit entry white line."
+                    </div>
+                </div>
+
+                <!-- Tyre Strategy History -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Stint & Tyre Strategy History</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Driver</th><th>Stint 1</th><th>Stint 2</th><th>Stint 3</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>VER</td>
+                                <td><span class="compound-pill medium">M</span> L1 - L18</td>
+                                <td><span class="compound-pill hard">H</span> L19 - L40</td>
+                                <td><span class="compound-pill soft">S</span> L41 - Current</td>
+                            </tr>
+                            <tr>
+                                <td>NOR</td>
+                                <td><span class="compound-pill medium">M</span> L1 - L22</td>
+                                <td><span class="compound-pill hard">H</span> L23 - Current</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 4: F1 FANTASY GAMING -->
+        <section id="fantasy" class="tab-content">
+            <div class="card">
+                <h3>Formula Recap Fantasy League</h3>
+                <p style="margin-bottom:1rem;">Manage your team budget, make substitutions before Qualifying, and stack points based on live overtake metrics.</p>
+                <div style="display:flex; gap: 20px; flex-wrap: wrap;">
+                    <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; flex:1;">
+                        <h4>Your Active Roster</h4>
+                        <p style="font-size:0.9rem; margin-top:5px;">Verstappen, Norris, Albon, Tsunoda, Bearman | <strong>Red Bull Racing</strong></p>
+                    </div>
+                    <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; width:200px;">
+                        <h4>Remaining Budget</h4>
+                        <p style="font-size:1.4rem; font-weight:bold; color:var(--f1-gold);">$2.4M</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: AT-TRACK FAN GUIDE -->
+        <section id="fanguide" class="tab-content">
+            <div class="grid-dashboard">
+                <div class="card">
+                    <h3>Interactive Circuit Map & Amenities</h3>
+                    <p style="font-size:0.9rem; color:var(--f1-subtext);">Grandstand entrance gates, food zones, fan zone stages, and hydration stations.</p>
+                    <ul style="margin-top:10px; padding-left:20px; font-size:0.9rem; line-height: 1.8;">
+                        <li><strong>Gate 3:</strong> Fastest access to General Admission Turn 1 hill.</li>
+                        <li><strong>Fan Zone Stage:</strong> Driver Q&A at 11:30 AM local time.</li>
+                        <li><strong>Hydration Hubs:</strong> Behind Main Grandstand & Turn 4 terrace.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Tab Switcher Engine
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            if(tabId === 'telemetry') {
+                renderGPSSimulator();
+            }
+        }
+
+        // Localized Timetable Generator
+        function loadLocalizedSchedule() {
+            const sessions = [
+                { name: "Practice 1", utc: "2026-09-18T11:30:00Z" },
+                { name: "Practice 2", utc: "2026-09-18T15:00:00Z" },
+                { name: "Qualifying", utc: "2026-09-19T14:00:00Z" },
+                { name: "Grand Prix", utc: "2026-09-20T13:00:00Z" }
+            ];
+
+            const table = document.getElementById('schedule-table');
+            table.innerHTML = "<thead><tr><th>Session</th><th>Local Time</th></tr></thead>";
+            const tbody = document.createElement('tbody');
+
+            sessions.forEach(s => {
+                const localDate = new Date(s.utc);
+                const timeString = localDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' });
+                const row = `<tr><td>${s.name}</td><td><strong>${timeString}</strong></td></tr>`;
+                tbody.innerHTML += row;
+            });
+            table.appendChild(tbody);
+        }
+
+        // 2D Canvas Track & Driver Position Renderer
+        function renderGPSSimulator() {
+            const canvas = document.getElementById('gpsTrackCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            canvas.height = 320;
+
+            let t = 0;
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw Track Loop Path
+                ctx.beginPath();
+                ctx.strokeStyle = "#333344";
+                ctx.lineWidth = 14;
+                ctx.ellipse(canvas.width / 2, 160, canvas.width / 3, 100, 0, 0, 2 * Math.PI);
+                ctx.stroke();
+
+                // Driver 1 Dot (Verstappen)
+                const x1 = canvas.width / 2 + Math.cos(t) * (canvas.width / 3);
+                const y1 = 160 + Math.sin(t) * 100;
+                ctx.beginPath();
+                ctx.fillStyle = "#e10600";
+                ctx.arc(x1, y1, 8, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // Driver 2 Dot (Norris)
+                const x2 = canvas.width / 2 + Math.cos(t - 0.25) * (canvas.width / 3);
+                const y2 = 160 + Math.sin(t - 0.25) * 100;
+                ctx.beginPath();
+                ctx.fillStyle = "#ffb800";
+                ctx.arc(x2, y2, 8, 0, 2 * Math.PI);
+                ctx.fill();
+
+                t += 0.02;
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            loadLocalizedSchedule();
+        };
+    </script>
+</body>
+</html>
