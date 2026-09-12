@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formula Recap | Madrid GP Interactive Telemetry Hub</title>
+    <title>Formula Recap | Official F1 Hub & Technical Telemetry</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,700&display=swap');
 
@@ -39,6 +39,7 @@
             overflow-x: hidden;
         }
 
+        /* Top Navigation Bar */
         header {
             background-color: #000;
             border-bottom: 4px solid var(--f1-red);
@@ -145,6 +146,7 @@
             text-transform: uppercase;
         }
 
+        /* Layout & Dashboard Grid */
         main {
             flex: 1;
             max-width: 1440px;
@@ -239,6 +241,8 @@
         .soft { background-color: #ff2a2a; color: #fff; }
         .medium { background-color: #ffd000; color: #000; }
         .hard { background-color: #ffffff; color: #000; }
+        .inter { background-color: #00d26a; color: #fff; }
+        .wet { background-color: #00a2ff; color: #fff; }
 
         canvas {
             width: 100%;
@@ -293,7 +297,6 @@
             border-color: var(--f1-red);
         }
 
-        /* Live Cockpit Telemetry Widgets */
         .cockpit-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -361,12 +364,38 @@
 
         .race-list-item:hover { background: var(--f1-light-card); }
 
+        /* News Cards Styling */
+        .news-card-featured {
+            grid-column: span 2;
+            background: linear-gradient(180deg, rgba(225, 6, 0, 0.1) 0%, var(--f1-dark-card) 100%);
+        }
+
+        .news-tag {
+            background: var(--f1-red);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .news-meta {
+            font-size: 0.8rem;
+            color: var(--f1-subtext);
+            margin-top: 10px;
+            display: flex;
+            gap: 15px;
+        }
+
         @media (max-width: 900px) {
             .navbar { flex-direction: column; align-items: flex-start; gap: 12px; padding: 1rem; }
             .nav-links { width: 100%; }
             main { padding: 1rem; }
             .grid-dashboard { grid-template-columns: 1fr; }
-            .card[style*="grid-column: span 2"] { grid-column: span 1 !important; }
+            .card[style*="grid-column: span 2"], .news-card-featured { grid-column: span 1 !important; }
         }
     </style>
 </head>
@@ -378,11 +407,10 @@
             <ul class="nav-links">
                 <li><button class="tab-btn active" onclick="switchTab('hub')">Race Hub</button></li>
                 <li><button class="tab-btn" onclick="switchTab('telemetry')">Madrid Telemetry</button></li>
-                <li><button class="tab-btn" onclick="switchTab('weather')">Weather & Grip</button></li>
-                <li><button class="tab-btn" onclick="switchTab('strategy')">Pit & Strategy</button></li>
+                <li><button class="tab-btn" onclick="switchTab('weather')">Weather & Track</button></li>
+                <li><button class="tab-btn" onclick="switchTab('strategy')">Strategy & Pit Hub</button></li>
                 <li><button class="tab-btn" onclick="switchTab('standings')">Standings</button></li>
-                <li><button class="tab-btn" onclick="switchTab('fantasy')">F1 Fantasy</button></li>
-                <li><button class="tab-btn" onclick="switchTab('fanguide')">At-Track Guide</button></li>
+                <li><button class="tab-btn" onclick="switchTab('news')">News & Tech</button></li>
             </ul>
         </div>
     </header>
@@ -453,10 +481,9 @@
             </div>
         </section>
 
-        <!-- TAB 2: OFFICIAL MADRID TELEMETRY ENGINE WITH COCKPIT GAUGES -->
+        <!-- TAB 2: MADRID TELEMETRY ENGINE -->
         <section id="telemetry" class="tab-content">
             <div class="grid-dashboard">
-                
                 <div class="card" style="grid-column: span 2;">
                     <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
                         <div>
@@ -483,7 +510,6 @@
                     </div>
                 </div>
 
-                <!-- Live Cockpit Telemetry Widgets -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>Live Telemetry Cockpit Dashboard (<span id="active-driver-label">#12 K. Antonelli</span>)</h3>
                     <div class="cockpit-grid">
@@ -512,7 +538,6 @@
                     </div>
                 </div>
 
-                <!-- Official Madrid Circuit 2D Canvas Map -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>
                         Official Madrid Street Circuit Layout (22 Turns)
@@ -530,7 +555,6 @@
                     </div>
                 </div>
 
-                <!-- Interactive Turn Metadata Inspector -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>Interactive Turn Breakdown Inspector</h3>
                     <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;" id="turn-buttons-container"></div>
@@ -546,13 +570,11 @@
                     </div>
                 </div>
 
-                <!-- Multi-Channel Trace Graph -->
                 <div class="card" style="grid-column: span 2;">
                     <h3 id="trace-title">Live Speed & Throttle Trace (Madrid Circuit Lap Distance)</h3>
                     <canvas id="telemetryTraceCanvas" height="240"></canvas>
                 </div>
 
-                <!-- Sector Matrix -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>Sector Micro-Telemetry & Speed Trap Matrix</h3>
                     <table>
@@ -570,71 +592,216 @@
                         <tbody id="sector-matrix-body"></tbody>
                     </table>
                 </div>
-
             </div>
         </section>
 
-        <!-- TAB 3: WEATHER & GRIP -->
+        <!-- TAB 3: EXPANDED WEATHER & TRACK CONDITIONS -->
         <section id="weather" class="tab-content">
             <div class="grid-dashboard">
+                
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Live Circuit Doppler Weather Radar (IFEMA Sector)</h3>
+                    <canvas id="weatherRadarCanvas" height="260"></canvas>
+                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--f1-subtext); margin-top:8px;">
+                        <span>🌧️ Rain Cell Distance: 14.2 km SW</span>
+                        <span>⏱️ Expected Precipitation Window: ~18 Mins</span>
+                    </div>
+                </div>
+
                 <div class="card">
-                    <h3>Circuit Environmental Weather</h3>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                    <h3>Circuit Environment Telemetry</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">TRACK TEMP</span>
                             <div style="font-size:1.4rem; font-weight:900; color:var(--f1-gold);">38.4 °C</div>
                         </div>
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">AIR TEMP</span>
-                            <div style="font-size:1.4rem; font-weight:900; color:var(--f1-text);">24.1 °C</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:#fff;">24.1 °C</div>
+                        </div>
+                        <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">HUMIDITY</span>
+                            <div style="font-size:1.4rem; font-weight:900; color:var(--sector-3-blue);">58%</div>
+                        </div>
+                        <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">PRESSURE</span>
+                            <div style="font-size:1.4rem; font-weight:900; color:#fff;">1014 hPa</div>
                         </div>
                     </div>
                 </div>
+
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Tyre Compound Crossover Thresholds & Track Evolution</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Compound Class</th><th>Track State</th><th>Optimal Window</th><th>Pace Delta</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="compound-pill medium">M</span> Slicks (Dry)</td>
+                                <td>Dry Asphalt (>85% Grip)</td>
+                                <td>1:16.500 – 1:19.000</td>
+                                <td><span style="color:var(--accent-green); font-weight:bold;">BASELINE</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="compound-pill inter">I</span> Intermediates (Damp)</td>
+                                <td>Damp / Light Standing Water</td>
+                                <td>1:25.200 – 1:29.800</td>
+                                <td>+8.7s vs Slicks</td>
+                            </tr>
+                            <tr>
+                                <td><span class="compound-pill wet">W</span> Full Wets (Heavy Rain)</td>
+                                <td>Standing Water / Torrential</td>
+                                <td>1:33.400+</td>
+                                <td>+16.9s vs Slicks</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </section>
 
-        <!-- TAB 4: STRATEGY -->
+        <!-- TAB 4: EXPANDED STRATEGY & PIT HUB -->
         <section id="strategy" class="tab-content">
-            <div class="card">
-                <h3>Pit Stop Execution</h3>
-                <table>
-                    <thead><tr><th>Team</th><th>Driver</th><th>Time</th></tr></thead>
-                    <tbody><tr><td>Red Bull Racing</td><td>VER</td><td><strong>1.98s</strong></td></tr></tbody>
-                </table>
+            <div class="grid-dashboard">
+                
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Live Tyre Degradation & Pace Drop-off Model</h3>
+                    <canvas id="tyreDegCanvas" height="240"></canvas>
+                    <div style="display:flex; gap:20px; font-size:0.75rem; justify-content:center; margin-top:8px;">
+                        <span style="color:#ff2a2a; font-weight:bold;">― Soft Compound (High Deg)</span>
+                        <span style="color:#ffd000; font-weight:bold;">― Medium Compound (Linear Deg)</span>
+                        <span style="color:#ffffff; font-weight:bold;">― Hard Compound (Low Deg)</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Fastest Pit Stop Execution Rankings</h3>
+                    <table>
+                        <thead><tr><th>Pos</th><th>Team</th><th>Driver</th><th>Stop Time</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Red Bull Racing</td><td>VER</td><td><strong>1.98s</strong></td></tr>
+                            <tr><td>2</td><td>Ferrari</td><td>LEC</td><td><strong>2.12s</strong></td></tr>
+                            <tr><td>3</td><td>McLaren F1</td><td>NOR</td><td><strong>2.24s</strong></td></tr>
+                            <tr><td>4</td><td>Mercedes AMG</td><td>ANT</td><td><strong>2.31s</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Undercut & Overcut Strategy Window Calculator</h3>
+                    <div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;">
+                        <input type="number" id="gapInput" placeholder="Gap to target car (sec)" value="1.8" step="0.1" style="background:var(--f1-light-card); color:#fff; border:1px solid var(--soft-border); padding:8px 12px; border-radius:4px; font-weight:bold;">
+                        <button onclick="calculateUndercut()" style="background:var(--f1-red); color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; font-weight:bold; text-transform:uppercase;">Calculate Pit Delta</button>
+                    </div>
+                    <div id="undercut-result" style="margin-top:14px; font-weight:bold; color:var(--f1-gold);">
+                        Result: High Undercut Success! Estimated outlap delta gain: ~1.5s on fresh Medium tyres.
+                    </div>
+                </div>
+
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Recommended Spanish GP Stint Options (57 Laps)</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Strategy</th><th>Stint 1</th><th>Stint 2</th><th>Stint 3</th><th>Expected Race Time</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Optimal 1-Stop</strong></td>
+                                <td><span class="compound-pill medium">M</span> L1 – L22</td>
+                                <td><span class="compound-pill hard">H</span> L23 – L57</td>
+                                <td>-</td>
+                                <td><strong style="color:var(--accent-green);">1h 24m 12.4s</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aggressive 2-Stop</strong></td>
+                                <td><span class="compound-pill soft">S</span> L1 – L14</td>
+                                <td><span class="compound-pill medium">M</span> L15 – L36</td>
+                                <td><span class="compound-pill soft">S</span> L37 – L57</td>
+                                <td>1h 24m 15.8s (+3.4s)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </section>
 
-        <!-- TAB 5: STANDINGS -->
+        <!-- TAB 5: EXPANDED STANDINGS HUB -->
         <section id="standings" class="tab-content">
-            <div class="card">
-                <h3>Driver Championship Standings</h3>
-                <table>
-                    <thead><tr><th>Pos</th><th>Driver</th><th>Team</th><th>Pts</th></tr></thead>
-                    <tbody id="driver-standings-body"></tbody>
-                </table>
+            <div class="grid-dashboard">
+                
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Official 2026 FIA Driver Championship Standings</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Wins</th><th>Podiums</th><th>Pts</th></tr>
+                        </thead>
+                        <tbody id="driver-standings-body"></tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>Constructor Championship</h3>
+                    <table>
+                        <thead><tr><th>Pos</th><th>Team</th><th>Pts</th><th>Gap</th></tr></thead>
+                        <tbody id="constructor-standings-body"></tbody>
+                    </table>
+                </div>
+
             </div>
         </section>
 
-        <!-- TAB 6: FANTASY -->
-        <section id="fantasy" class="tab-content">
-            <div class="card">
-                <h3>Formula Recap Fantasy League</h3>
-                <p style="color:var(--f1-subtext);">Active Lineup: Antonelli, Russell, Hamilton, Norris</p>
-            </div>
-        </section>
+        <!-- TAB 6: NEW TECHNICAL NEWS & ANALYSIS TAB -->
+        <section id="news" class="tab-content">
+            <div class="grid-dashboard">
+                
+                <div class="card news-card-featured">
+                    <span class="news-tag">Technical Analysis</span>
+                    <h2 style="font-size:1.4rem; font-weight:900; margin-bottom:8px;">Madrid IFEMA Street Circuit Surface Coating & Aero Evaluation</h2>
+                    <p style="color:var(--f1-subtext); font-size:0.92rem; line-height:1.6;">
+                        Teams have deployed low-drag rear wing beam packages tailored for Sector 1's long DRS straight, while balancing high-downforce floor edges to maintain traction through the Valdebebas banked curve.
+                    </p>
+                    <div class="news-meta">
+                        <span>🗓️ Sep 18, 2026</span>
+                        <span>✍️ Formula Recap Aero Desk</span>
+                    </div>
+                </div>
 
-        <!-- TAB 7: FAN GUIDE -->
-        <section id="fanguide" class="tab-content">
-            <div class="card">
-                <h3>Madrid IFEMA Circuit Fan Guide</h3>
-                <p style="color:var(--f1-subtext);">Direct Metro Line 8 access to Feria de Madrid station.</p>
+                <div class="card">
+                    <span class="news-tag">FIA Technical Directive</span>
+                    <h3>Rear Wing Aero Elasticity Checks Heightened</h3>
+                    <p style="color:var(--f1-subtext); font-size:0.85rem; line-height:1.5; margin-top:6px;">
+                        The FIA has introduced stricter vertical deflection tests for mainplane slot gaps to curb aero-elastic flexing at speeds exceeding 330 km/h.
+                    </p>
+                    <div class="news-meta"><span>🗓️ Sep 17, 2026</span></div>
+                </div>
+
+                <div class="card">
+                    <span class="news-tag">Power Unit Briefing</span>
+                    <h3>2026 Active Aero & MGU-K Energy Deployments</h3>
+                    <p style="color:var(--f1-subtext); font-size:0.85rem; line-height:1.5; margin-top:6px;">
+                        Analyzing how the 350kW MGU-K hybrid boost is deployed along Sector 1's Straight Mode Zone compared to traditional DRS flaps.
+                    </p>
+                    <div class="news-meta"><span>🗓️ Sep 16, 2026</span></div>
+                </div>
+
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Video Highlights & Technical Debrief</h3>
+                    <div style="position: relative; padding-bottom: 45%; height: 0; overflow: hidden; border-radius: 8px; background: #000;">
+                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" 
+                                src="https://www.youtube-nocookie.com/embed/videoseries?list=PLfoNZDHitwjU_O25114gZ7_S1kH-_yP0O" 
+                                title="F1 Highlights" allowfullscreen></iframe>
+                    </div>
+                </div>
+
             </div>
         </section>
 
     </main>
 
     <script>
-        // Official 22-Turn Geometry Nodes matching the exact Madrid Track Layout Diagram
         const madridNodes = [
             { x: 0.18, y: 0.68, num: "SF", sec: 1 },
             { x: 0.17, y: 0.44, num: "1", sec: 1, speed: "115 km/h", gear: "3rd", desc: "Heavy braking zone entering Turn 1 chicane." },
@@ -672,6 +839,7 @@
 
         let currentChannelMode = 'overlay';
         let animFrameId = null;
+        let weatherRadarFrameId = null;
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -682,6 +850,10 @@
 
             if (tabId === 'telemetry') {
                 renderAllTelemetry();
+            } else if (tabId === 'weather') {
+                renderWeatherRadar();
+            } else if (tabId === 'strategy') {
+                renderTyreDegChart();
             }
         }
 
@@ -750,7 +922,6 @@
             `;
         }
 
-        // Render Official Madrid Track Canvas with Real Map Annotations & Live Gauges
         function renderOfficialMadridCanvas(d1Key, d2Key) {
             const canvas = document.getElementById('madridTrackCanvas');
             if (!canvas) return;
@@ -800,7 +971,6 @@
             function animate() {
                 ctx.clearRect(0, 0, w, h);
 
-                // 1. Draw Track Asphalt
                 ctx.beginPath();
                 ctx.strokeStyle = "#20202d";
                 ctx.lineWidth = 18;
@@ -812,20 +982,18 @@
                 });
                 ctx.stroke();
 
-                // 2. Draw Sector Color Lines
                 for (let i = 0; i < smoothPath.length - 1; i++) {
                     ctx.beginPath();
                     ctx.moveTo(smoothPath[i].x, smoothPath[i].y);
                     ctx.lineTo(smoothPath[i + 1].x, smoothPath[i + 1].y);
                     ctx.lineWidth = 4;
                     
-                    if (smoothPath[i].sec === 1) ctx.strokeStyle = "#ff2a85";      // Sector 1 Pink
-                    else if (smoothPath[i].sec === 2) ctx.strokeStyle = "#ffd700"; // Sector 2 Yellow
-                    else ctx.strokeStyle = "#00a2ff";                              // Sector 3 Blue
+                    if (smoothPath[i].sec === 1) ctx.strokeStyle = "#ff2a85";
+                    else if (smoothPath[i].sec === 2) ctx.strokeStyle = "#ffd700";
+                    else ctx.strokeStyle = "#00a2ff";
                     ctx.stroke();
                 }
 
-                // 3. Draw Track Annotations & Markers
                 canvasPts.forEach((pt) => {
                     if (pt.num !== "SF" && pt.num !== "ACT") {
                         ctx.fillStyle = "#9494a8";
@@ -851,7 +1019,6 @@
                     }
                 });
 
-                // 4. Update Driver 1 Positioning & Cockpit Telemetry
                 const pos1Index = Math.floor(car1Progress);
                 const pos1 = smoothPath[pos1Index];
                 if (pos1) {
@@ -863,7 +1030,6 @@
                     ctx.font = "bold 10px sans-serif";
                     ctx.fillText(d1Key, pos1.x - 5, pos1.y - 12);
 
-                    // Dynamic Cockpit Gauges Update
                     const progressRatio = pos1Index / smoothPath.length;
                     const calculatedSpeed = Math.floor(180 + Math.sin(progressRatio * Math.PI * 6) * 140);
                     const calculatedGear = calculatedSpeed > 280 ? 8 : calculatedSpeed > 230 ? 7 : calculatedSpeed > 170 ? 5 : 3;
@@ -879,7 +1045,6 @@
                     document.getElementById('live-drs').innerText = (calculatedSpeed > 270) ? "ACTIVE" : "AVAILABLE";
                 }
 
-                // 5. Driver 2 Marker
                 const pos2 = smoothPath[Math.floor(car2Progress)];
                 if (pos2) {
                     ctx.beginPath();
@@ -959,6 +1124,100 @@
             }
         }
 
+        // Animated Weather Radar Engine
+        function renderWeatherRadar() {
+            const canvas = document.getElementById('weatherRadarCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            const w = canvas.width;
+            const h = canvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            let angle = 0;
+
+            function animateRadar() {
+                ctx.clearRect(0, 0, w, h);
+
+                // Grid Circles
+                [0.25, 0.5, 0.75, 1.0].forEach(r => {
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, (h / 2.2) * r, 0, 2 * Math.PI);
+                    ctx.strokeStyle = "rgba(0, 210, 106, 0.15)";
+                    ctx.stroke();
+                });
+
+                // Radar Sweeping Cone
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, h / 2.2, angle, angle + 0.3);
+                ctx.fillStyle = "rgba(0, 210, 106, 0.2)";
+                ctx.fill();
+
+                // Simulated Rain Cell Pulse
+                ctx.beginPath();
+                ctx.arc(cx - 60, cy + 40, 30, 0, 2 * Math.PI);
+                ctx.fillStyle = "rgba(0, 162, 255, 0.4)";
+                ctx.fill();
+
+                angle += 0.03;
+                weatherRadarFrameId = requestAnimationFrame(animateRadar);
+            }
+            animateRadar();
+        }
+
+        // Tyre Degradation Chart Engine
+        function renderTyreDegChart() {
+            const canvas = document.getElementById('tyreDegCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.strokeStyle = "rgba(255,255,255,0.08)";
+            for (let y = 20; y < h; y += 40) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            // Soft (Red)
+            ctx.beginPath(); ctx.strokeStyle = "#ff2a2a"; ctx.lineWidth = 2.5;
+            for (let x = 0; x < w; x += 10) {
+                const y = 30 + (x / w) * (x / w) * (h - 60);
+                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Medium (Yellow)
+            ctx.beginPath(); ctx.strokeStyle = "#ffd000"; ctx.lineWidth = 2.5;
+            for (let x = 0; x < w; x += 10) {
+                const y = 45 + (x / w) * (h - 90);
+                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Hard (White)
+            ctx.beginPath(); ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2.5;
+            for (let x = 0; x < w; x += 10) {
+                const y = 60 + (x / w) * (h - 120) * 0.6;
+                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        function calculateUndercut() {
+            const gap = parseFloat(document.getElementById('gapInput').value);
+            const res = document.getElementById('undercut-result');
+            if (gap <= 2.2) {
+                res.innerHTML = `Result: High Undercut Success! Estimated outlap delta gain: ~1.5s on fresh Medium tyres.`;
+                res.style.color = 'var(--accent-green)';
+            } else {
+                res.innerHTML = `Result: Undercut Unlikely. Gap of ${gap}s exceeds single-lap tyre warmup delta.`;
+                res.style.color = 'var(--f1-red)';
+            }
+        }
+
         function loadLocalizedSchedule() {
             const sessions = [
                 { name: "Practice 1", utc: "2026-09-18T11:30:00Z" },
@@ -981,18 +1240,47 @@
                 const data = await res.json();
                 const drivers = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
 
-                document.getElementById('driver-standings-body').innerHTML = drivers.slice(0, 5).map(d => `
-                    <tr><td>${d.position}</td><td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td><td>${d.Constructors[0].name}</td><td><strong>${d.points}</strong></td></tr>
+                document.getElementById('driver-standings-body').innerHTML = drivers.slice(0, 10).map(d => `
+                    <tr>
+                        <td>${d.position}</td>
+                        <td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td>
+                        <td>${d.Constructors[0].name}</td>
+                        <td>${d.wins}</td>
+                        <td>${d.position <= 3 ? d.position : '-'}</td>
+                        <td><strong>${d.points}</strong></td>
+                    </tr>
+                `).join('');
+
+                const constRes = await fetch('https://api.jolpi.ca/ergast/f1/current/constructorstandings.json');
+                const constData = await constRes.json();
+                const constructors = constData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
+
+                document.getElementById('constructor-standings-body').innerHTML = constructors.map(c => `
+                    <tr>
+                        <td>${c.position}</td>
+                        <td><strong>${c.Constructor.name}</strong></td>
+                        <td><strong>${c.points}</strong></td>
+                        <td>${c.position === '1' ? 'LEADER' : '-' + (constructors[0].points - c.points)}</td>
+                    </tr>
                 `).join('');
             } catch (e) {
                 document.getElementById('driver-standings-body').innerHTML = `
-                    <tr><td>1</td><td><strong>K. Antonelli</strong></td><td>Mercedes</td><td>267</td></tr>
-                    <tr><td>2</td><td><strong>G. Russell</strong></td><td>Mercedes</td><td>201</td></tr>
+                    <tr><td>1</td><td><strong>K. Antonelli</strong></td><td>Mercedes</td><td>5</td><td>8</td><td><strong>267</strong></td></tr>
+                    <tr><td>2</td><td><strong>G. Russell</strong></td><td>Mercedes</td><td>3</td><td>6</td><td><strong>201</strong></td></tr>
+                    <tr><td>3</td><td><strong>L. Hamilton</strong></td><td>Ferrari</td><td>2</td><td>5</td><td><strong>191</strong></td></tr>
+                `;
+                document.getElementById('constructor-standings-body').innerHTML = `
+                    <tr><td>1</td><td><strong>Mercedes AMG F1</strong></td><td><strong>468</strong></td><td>LEADER</td></tr>
+                    <tr><td>2</td><td><strong>Scuderia Ferrari</strong></td><td><strong>346</strong></td><td>-122</td></tr>
                 `;
             }
         }
 
-        window.addEventListener('resize', renderAllTelemetry);
+        window.addEventListener('resize', () => {
+            renderAllTelemetry();
+            if (document.getElementById('weather').classList.contains('active')) renderWeatherRadar();
+            if (document.getElementById('strategy').classList.contains('active')) renderTyreDegChart();
+        });
 
         window.onload = function() {
             buildTurnButtons();
