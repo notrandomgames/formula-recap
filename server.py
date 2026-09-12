@@ -1,10 +1,8 @@
+import httpx
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-import asyncio
-import json
-import random
 
-app = FastAPI(title="Formula Recap Unlocked Data Stream")
+app = FastAPI(title="Formula Recap Real Data Engine")
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,31 +12,44 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-drivers = [
-    {"number": 1, "code": "VER", "team": "Red Bull Racing", "speed": 315, "throttle": 100, "gear": 8},
-    {"number": 4, "code": "NOR", "team": "McLaren", "speed": 312, "throttle": 98, "gear": 8},
-    {"number": 16, "code": "LEC", "team": "Ferrari", "speed": 310, "throttle": 95, "gear": 8},
-]
+# 1. Fetch Accurate Real Driver Standings (Ergast API)
+@app.get("/api/v1/standings")
+async def get_real_standings():
+    url = "https://ergast.com/api/f1/current/driverStandings.json"
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
+        data = response.json()
+        
+    standings_list = data["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
+    
+    formatted_standings = [
+        {
+            "pos": driver["position"],
+            "driver": f"{driver['Driver']['givenName']} {driver['Driver']['familyName']}",
+            "points": driver["points"],
+            "team": driver["Constructors"][0]["name"]
+        }
+        for driver in standings_list
+    ]
+    return {"standings": formatted_standings}
 
+# 2. Stream Real Live Telemetry & Radio Feeds (OpenF1 API)
 @app.websocket("/ws/telemetry")
 async def telemetry_websocket(websocket: WebSocket):
-    """Broadcasting live telemetry feed freely to all connected devices."""
     await websocket.accept()
-    try:
-        while True:
-            for driver in drivers:
-                driver["speed"] = max(80, min(350, driver["speed"] + random.randint(-15, 15)))
-                driver["throttle"] = max(0, min(100, driver["throttle"] + random.randint(-10, 10)))
-            
-            payload = {
-                "timestamp": asyncio.get_event_loop().time(),
-                "telemetry": drivers
-            }
-            await websocket.send_text(json.dumps(payload))
-            await asyncio.sleep(0.25)
-    except WebSocketDisconnect:
-        pass
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+    # OpenF1 live car data endpoint for current active session
+    openf1_url = "https://api.openf1.org/v1/car_data?session_key=latest"
+    
+    async with httpx.AsyncClient() as client:
+        try:
+            while True:
+                response = await client.get(openf1_url)
+                if response.status_code == 200:
+                    raw_data = response.json()
+                    # Transmit the latest real telemetry frame
+                    await websocket.send_json({"telemetry": raw_data[-10:]})
+                
+                await asyncio.sleep(1.0)
+        except WebSocketDisconnect:
+            pass
