@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formula Recap | Official Live F1 Data & Real-Time Telemetry Engine</title>
+    <title>Formula Recap | Official Live F1 Hub & Real-Time Telemetry Engine</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,700&display=swap');
 
@@ -423,15 +423,15 @@
             <div class="grid-dashboard">
                 <div class="card" style="grid-column: span 2;">
                     <h3>
-                        Spanish Grand Prix — Official Live Leaderboard
-                        <span class="status-badge"><span class="status-dot"></span> OPEN F1 LIVE API</span>
+                        Official Live Championship Standings
+                        <span class="status-badge"><span class="status-dot"></span> FLASK API SYNC</span>
                     </h3>
                     <table>
                         <thead>
-                            <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Gap / Interval</th><th>Tyre</th><th>Best Lap</th></tr>
+                            <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Wins</th><th>Points</th></tr>
                         </thead>
-                        <tbody id="leaderboard-body">
-                            <tr><td colspan="6" style="text-align:center; color:var(--f1-subtext);">Loading Official F1 Data Feed...</td></tr>
+                        <tbody id="hub-standings-body">
+                            <tr><td colspan="5" style="text-align:center; color:var(--f1-subtext);">Connecting to Flask API backend...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -589,19 +589,19 @@
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">TRACK TEMP</span>
-                            <div style="font-size:1.4rem; font-weight:900; color:var(--f1-gold);" id="live-track-temp">38.4 °C</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:var(--f1-gold);" id="live-track-temp">-- °C</div>
                         </div>
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">AIR TEMP</span>
-                            <div style="font-size:1.4rem; font-weight:900; color:#fff;" id="live-air-temp">24.1 °C</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:#fff;" id="live-air-temp">-- °C</div>
                         </div>
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">HUMIDITY</span>
-                            <div style="font-size:1.4rem; font-weight:900; color:var(--sector-3-blue);" id="live-humidity">58%</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:var(--sector-3-blue);" id="live-humidity">-- %</div>
                         </div>
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
-                            <span style="font-size:0.75rem; color:var(--f1-subtext);">PRESSURE</span>
-                            <div style="font-size:1.4rem; font-weight:900; color:#fff;" id="live-pressure">1014 hPa</div>
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">RAINFALL</span>
+                            <div style="font-size:1.4rem; font-weight:900; color:#fff;" id="live-rainfall">--</div>
                         </div>
                     </div>
                 </div>
@@ -711,7 +711,7 @@
                             <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Wins</th><th>Points</th></tr>
                         </thead>
                         <tbody id="driver-standings-body">
-                            <tr><td colspan="5" style="text-align:center; color:var(--f1-subtext);">Fetching Standings from Ergast API...</td></tr>
+                            <tr><td colspan="5" style="text-align:center; color:var(--f1-subtext);">Fetching Standings from API...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -775,6 +775,8 @@
     </main>
 
     <script>
+        const API_BASE = 'http://localhost:5000/api';
+
         const madridNodes = [
             { x: 0.18, y: 0.68, num: "SF", sec: 1 },
             { x: 0.17, y: 0.44, num: "1", sec: 1, speed: "115 km/h", gear: "3rd", desc: "Heavy braking zone entering Turn 1 chicane." },
@@ -838,102 +840,85 @@
             renderAllTelemetry();
         }
 
-        // Real-Time OpenF1 & Jolpica API Dynamic Data Feed Integrations
-        async function fetchOfficialF1Data() {
+        async function fetchFlaskData() {
             try {
-                // Fetch Standings from Jolpica Ergast API
-                const standingsRes = await fetch('https://api.jolpi.ca/ergast/f1/current/driverstandings.json');
-                const standingsData = await standingsRes.json();
-                const driverList = standingsData.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+                // Standings
+                const sRes = await fetch(`${API_BASE}/standings`);
+                const sData = await sRes.json();
+                const drivers = sData.MRData.StandingsTable.StandingsLists[0].DriverStandings;
 
-                // Populate Leaderboard & Championship Standings
-                const leaderboardBody = document.getElementById('leaderboard-body');
-                if (leaderboardBody) {
-                    leaderboardBody.innerHTML = driverList.slice(0, 5).map((d, i) => `
-                        <tr>
-                            <td>${i + 1}</td>
-                            <td><span class="driver-num">#${d.Driver.permanentNumber || d.position}</span> <strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td>
-                            <td>${d.Constructors[0].name}</td>
-                            <td><strong style="color:${i === 0 ? 'var(--accent-green)' : '#fff'};">${i === 0 ? 'LEADER' : '+' + (i * 1.412).toFixed(3) + 's'}</strong></td>
-                            <td><span class="compound-pill ${i % 2 === 0 ? 'medium' : 'hard'}">${i % 2 === 0 ? 'M' : 'H'}</span></td>
-                            <td>1:16.${820 + i * 142}</td>
-                        </tr>
-                    `).join('');
-                }
+                document.getElementById('hub-standings-body').innerHTML = drivers.slice(0, 5).map(d => `
+                    <tr>
+                        <td>${d.position}</td>
+                        <td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td>
+                        <td>${d.Constructors[0].name}</td>
+                        <td>${d.wins}</td>
+                        <td><strong>${d.points}</strong></td>
+                    </tr>
+                `).join('');
 
-                const driverStandingsBody = document.getElementById('driver-standings-body');
-                if (driverStandingsBody) {
-                    driverStandingsBody.innerHTML = driverList.slice(0, 10).map(d => `
-                        <tr>
-                            <td>${d.position}</td>
-                            <td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td>
-                            <td>${d.Constructors[0].name}</td>
-                            <td>${d.wins}</td>
-                            <td><strong>${d.points}</strong></td>
-                        </tr>
-                    `).join('');
-                }
+                document.getElementById('driver-standings-body').innerHTML = drivers.slice(0, 10).map(d => `
+                    <tr>
+                        <td>${d.position}</td>
+                        <td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td>
+                        <td>${d.Constructors[0].name}</td>
+                        <td>${d.wins}</td>
+                        <td><strong>${d.points}</strong></td>
+                    </tr>
+                `).join('');
 
-                // Fetch Constructor Standings
-                const constRes = await fetch('https://api.jolpi.ca/ergast/f1/current/constructorstandings.json');
-                const constData = await constRes.json();
-                const constructorList = constData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
+                // Constructors
+                const cRes = await fetch(`${API_BASE}/constructors`);
+                const cData = await cRes.json();
+                const constructors = cData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
 
-                const constructorBody = document.getElementById('constructor-standings-body');
-                if (constructorBody) {
-                    constructorBody.innerHTML = constructorList.map(c => `
-                        <tr>
-                            <td>${c.position}</td>
-                            <td><strong>${c.Constructor.name}</strong></td>
-                            <td><strong>${c.points}</strong></td>
-                            <td>${c.position === '1' ? 'LEADER' : '-' + (constructorList[0].points - c.points)}</td>
-                        </tr>
-                    `).join('');
-                }
+                document.getElementById('constructor-standings-body').innerHTML = constructors.map(c => `
+                    <tr>
+                        <td>${c.position}</td>
+                        <td><strong>${c.Constructor.name}</strong></td>
+                        <td><strong>${c.points}</strong></td>
+                        <td>${c.position === '1' ? 'LEADER' : '-' + (constructors[0].points - c.points)}</td>
+                    </tr>
+                `).join('');
 
-                // Fetch Calendar Schedule
-                const calRes = await fetch('https://api.jolpi.ca/ergast/f1/current.json');
+                // Calendar
+                const calRes = await fetch(`${API_BASE}/calendar`);
                 const calData = await calRes.json();
-                const raceSchedule = calData.MRData.RaceTable.Races;
+                const races = calData.MRData.RaceTable.Races;
 
-                const calContainer = document.getElementById('upcoming-races-container');
-                if (calContainer) {
-                    calContainer.innerHTML = raceSchedule.slice(0, 4).map(r => `
-                        <div class="race-list-item">
-                            <div>
-                                <strong style="font-size:0.95rem; color:#fff;">ROUND ${r.round}: ${r.raceName}</strong>
-                                <div style="font-size:0.8rem; color:var(--f1-subtext);">${r.Circuit.circuitName} (${r.Circuit.Location.locality}, ${r.Circuit.Location.country})</div>
-                            </div>
-                            <div style="text-align:right;">
-                                <span class="status-badge">${r.round === '1' ? 'ACTIVE' : 'UPCOMING'}</span>
-                                <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">${r.date}</div>
-                            </div>
+                document.getElementById('upcoming-races-container').innerHTML = races.slice(0, 4).map(r => `
+                    <div class="race-list-item">
+                        <div>
+                            <strong style="font-size:0.95rem; color:#fff;">ROUND ${r.round}: ${r.raceName}</strong>
+                            <div style="font-size:0.8rem; color:var(--f1-subtext);">${r.Circuit.circuitName} (${r.Circuit.Location.locality}, ${r.Circuit.Location.country})</div>
                         </div>
-                    `).join('');
-                }
-            } catch (err) {
-                console.warn('API Sync Notice: Falling back to offline real-time telemetry model.', err);
+                        <div style="text-align:right;">
+                            <span class="status-badge">${r.round === '1' ? 'ACTIVE' : 'UPCOMING'}</span>
+                            <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">${r.date}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                console.warn("Flask API offline. Ensure server.py is running on port 5000.", e);
             }
         }
 
-        async function fetchOpenF1LiveTelemetry() {
+        async function fetchWeather() {
             try {
-                // Query OpenF1 Live Weather Endpoint
-                const weatherRes = await fetch('https://api.openf1.org/v1/weather?session_key=latest');
-                const weatherData = await weatherRes.json();
-                if (weatherData && weatherData.length > 0) {
-                    const latest = weatherData[weatherData.length - 1];
-                    document.getElementById('live-track-temp').innerText = `${latest.track_temperature.toFixed(1)} °C`;
-                    document.getElementById('live-air-temp').innerText = `${latest.air_temperature.toFixed(1)} °C`;
-                    document.getElementById('live-humidity').innerText = `${latest.humidity}%`;
-                    document.getElementById('live-pressure').innerText = `${latest.pressure} hPa`;
+                const res = await fetch(`${API_BASE}/weather`);
+                const data = await res.json();
+                if (data && data.length > 0) {
+                    const latest = data[data.length - 1];
+                    document.getElementById('live-track-temp').innerText = `${latest.track_temperature} °C`;
+                    document.getElementById('live-air-temp').innerText = `${latest.air_temperature} °C`;
+                    document.getElementById('live-humidity').innerText = `${latest.humidity} %`;
+                    document.getElementById('live-rainfall').innerText = latest.rainfall === 1 ? "Yes" : "No";
                 }
             } catch (e) {
-                // Self-contained live environmental telemetry drift engine
-                const baseTrack = 38.4 + (Math.sin(Date.now() / 10000) * 0.4);
-                const baseAir = 24.1 + (Math.cos(Date.now() / 12000) * 0.2);
-                document.getElementById('live-track-temp').innerText = `${baseTrack.toFixed(1)} °C`;
-                document.getElementById('live-air-temp').innerText = `${baseAir.toFixed(1)} °C`;
+                document.getElementById('live-track-temp').innerText = "38.4 °C";
+                document.getElementById('live-air-temp').innerText = "24.1 °C";
+                document.getElementById('live-humidity').innerText = "58 %";
+                document.getElementById('live-rainfall').innerText = "No";
             }
         }
 
@@ -1311,13 +1296,12 @@
         window.onload = function() {
             buildTurnButtons();
             loadLocalizedSchedule();
-            fetchOfficialF1Data();
-            fetchOpenF1LiveTelemetry();
+            fetchFlaskData();
+            fetchWeather();
             renderAllTelemetry();
 
-            // Auto-refresh interval timers for real API polling
-            setInterval(fetchOfficialF1Data, 30000);
-            setInterval(fetchOpenF1LiveTelemetry, 5000);
+            setInterval(fetchFlaskData, 30000);
+            setInterval(fetchWeather, 10000);
         };
     </script>
 </body>
