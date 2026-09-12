@@ -3,27 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formula Recap | Madrid Grand Prix Hub & Live Telemetry</title>
+    <title>Formula Recap | Official F1 Race Hub & Live Telemetry</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,700&display=swap');
+
         :root {
             --f1-red: #e10600;
+            --f1-red-hover: #b80500;
             --f1-black: #15151e;
             --f1-dark-card: #1f1f27;
             --f1-light-card: #2a2a35;
-            --f1-text: #f1f1f1;
-            --f1-subtext: #a0a0b0;
+            --f1-text: #ffffff;
+            --f1-subtext: #9494a8;
             --f1-gold: #ffb800;
             --accent-green: #00d26a;
             --accent-blue: #3b82f6;
             --accent-purple: #a855f7;
-            --soft-border: rgba(255, 255, 255, 0.1);
+            --soft-border: rgba(255, 255, 255, 0.12);
+            --card-radius: 12px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Titillium Web', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
@@ -32,54 +36,83 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        /* F1 Top Header & Branding */
         header {
             background-color: #000;
-            border-bottom: 3px solid var(--f1-red);
+            border-bottom: 4px solid var(--f1-red);
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 20px rgba(225, 6, 0, 0.2);
         }
 
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.8rem 1.5rem;
-            max-width: 1400px;
+            padding: 0.75rem 1.5rem;
+            max-width: 1440px;
             margin: 0 auto;
         }
 
         .brand {
             font-weight: 900;
-            font-size: 1.5rem;
-            letter-spacing: -1px;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
             color: #fff;
             text-transform: uppercase;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .brand span { color: var(--f1-red); }
+        .brand span {
+            color: var(--f1-red);
+            background: linear-gradient(135deg, #e10600 0%, #ff4d4d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
+        .brand-badge {
+            background: var(--f1-red);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-style: normal;
+            vertical-align: middle;
+            transform: skewX(-12deg);
+        }
+
+        /* Nav Tab Bar with F1 Slanted Styling */
         .nav-links {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             list-style: none;
             overflow-x: auto;
             white-space: nowrap;
-            padding: 5px 0;
+            padding: 4px 0;
+            -webkit-overflow-scrolling: touch;
         }
 
         .nav-links button {
             background: transparent;
             border: none;
             color: var(--f1-subtext);
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.85rem;
-            padding: 8px 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s ease;
+            position: relative;
         }
 
         .nav-links button.active, .nav-links button:hover {
@@ -87,206 +120,533 @@
             background-color: var(--f1-light-card);
         }
 
+        .nav-links button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: var(--f1-red);
+            border-radius: 2px;
+        }
+
+        /* Official Broadcast Disclaimer Banner */
         .f1tv-banner {
-            background: #111;
+            background: linear-gradient(90deg, #0d0d12 0%, #1a1a24 50%, #0d0d12 100%);
             border-bottom: 1px solid var(--soft-border);
             text-align: center;
             padding: 8px 14px;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: var(--f1-subtext);
+            font-weight: 600;
         }
 
-        .f1tv-banner a { color: var(--f1-red); text-decoration: none; font-weight: bold; }
+        .f1tv-banner a {
+            color: var(--f1-red);
+            text-decoration: none;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
 
+        .f1tv-banner a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Container */
         main {
             flex: 1;
-            max-width: 1400px;
+            max-width: 1440px;
             width: 100%;
             margin: 0 auto;
-            padding: 1.25rem;
+            padding: 1.5rem;
         }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* Dashboard Responsive Grid */
         .grid-dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 1.25rem;
         }
 
+        /* Card Component with F1 Red Accent Line & Angled Edges */
         .card {
             background: var(--f1-dark-card);
             border: 1px solid var(--soft-border);
-            border-radius: 10px;
+            border-radius: var(--card-radius);
             padding: 1.25rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--f1-red) 0%, transparent 100%);
         }
 
         .card h3 {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 1rem;
             border-bottom: 1px solid var(--soft-border);
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.6rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        /* Data Tables */
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.88rem;
+            font-size: 0.9rem;
         }
 
         th, td {
-            padding: 9px 12px;
+            padding: 10px 12px;
             text-align: left;
             border-bottom: 1px solid var(--soft-border);
         }
 
         th {
             color: var(--f1-subtext);
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             font-size: 0.75rem;
+            letter-spacing: 0.8px;
         }
 
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background-color: var(--f1-light-card);
+        }
+
+        /* F1 Driver Number Badges */
+        .driver-num {
+            font-weight: 900;
+            font-style: italic;
+            color: var(--f1-subtext);
+            margin-right: 4px;
+        }
+
+        /* F1 Compound Indicators */
+        .compound-pill {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: 900;
+            font-size: 0.75rem;
+            color: #000;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+        .soft { background-color: #ff2a2a; color: #fff; }
+        .medium { background-color: #ffd000; color: #000; }
+        .hard { background-color: #ffffff; color: #000; }
+
+        /* Canvas Elements */
         canvas {
             width: 100%;
-            background-color: #0d0d12;
+            background-color: #0b0b10;
             border-radius: 8px;
             border: 1px solid var(--soft-border);
         }
 
-        .compound-pill {
-            display: inline-block;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 22px;
-            font-weight: 800;
-            font-size: 0.75rem;
-            color: #000;
-        }
-        .soft { background-color: #ff2a2a; color: #fff; }
-        .medium { background-color: #ffd000; }
-        .hard { background-color: #ffffff; }
-
+        /* Status & Live Indicators */
         .status-badge {
             background: rgba(0, 210, 106, 0.15);
             color: var(--accent-green);
-            padding: 3px 8px;
+            padding: 3px 10px;
             border-radius: 4px;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        @media (max-width: 768px) {
-            .navbar { flex-direction: column; align-items: flex-start; gap: 10px; }
-            main { padding: 0.75rem; }
-            .grid-dashboard { grid-template-columns: 1fr; }
-            .card[style*="grid-column: span 2"] { grid-column: span 1 !important; }
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Telemetry Control Buttons */
+        .tele-btn {
+            background: var(--f1-light-card);
+            color: var(--f1-subtext);
+            border: 1px solid var(--soft-border);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .tele-btn.active, .tele-btn:hover {
+            background: var(--f1-red);
+            color: #fff;
+            border-color: var(--f1-red);
+        }
+
+        /* Weather & Sensor Widgets */
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .metric-box {
+            background: var(--f1-light-card);
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--soft-border);
+        }
+
+        .metric-val {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--f1-gold);
+            margin-top: 4px;
+        }
+
+        /* Radio Log Item */
+        .radio-item {
+            background: #111118;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--f1-red);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 900px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 1rem;
+            }
+            .nav-links {
+                width: 100%;
+            }
+            main {
+                padding: 1rem;
+            }
+            .grid-dashboard {
+                grid-template-columns: 1fr;
+            }
+            .card[style*="grid-column: span 2"] {
+                grid-column: span 1 !important;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- Header & Navigation Bar -->
     <header>
         <div class="navbar">
-            <div class="brand">Formula <span>Recap</span></div>
+            <div class="brand">
+                Formula <span>Recap</span> <span class="brand-badge">HUB</span>
+            </div>
             <ul class="nav-links">
                 <li><button class="tab-btn active" onclick="switchTab('hub')">Race Hub</button></li>
                 <li><button class="tab-btn" onclick="switchTab('telemetry')">Madrid Telemetry</button></li>
+                <li><button class="tab-btn" onclick="switchTab('weather')">Weather & Grip</button></li>
+                <li><button class="tab-btn" onclick="switchTab('strategy')">Pit & Strategy</button></li>
                 <li><button class="tab-btn" onclick="switchTab('standings')">Standings</button></li>
-                <li><button class="tab-btn" onclick="switchTab('fanguide')">Madrid Fan Guide</button></li>
+                <li><button class="tab-btn" onclick="switchTab('fantasy')">F1 Fantasy</button></li>
+                <li><button class="tab-btn" onclick="switchTab('fanguide')">At-Track Guide</button></li>
             </ul>
         </div>
     </header>
 
+    <!-- F1 TV Video Disclaimer Banner -->
     <div class="f1tv-banner">
-        ℹ️ Live telemetry, timing & Madrid circuit telemetry are 100% free. Video feeds require the official <a href="https://f1tv.formula1.com" target="_blank" rel="noopener">F1 TV App</a>.
+        ℹ️ Telemetry, timing, GPS tracking & strategy models on Formula Recap are free. <strong>Live video broadcast streaming & onboard feeds</strong> require the official <a href="https://f1tv.formula1.com" target="_blank" rel="noopener">F1 TV App</a>.
     </div>
 
+    <!-- App Main Container -->
     <main>
 
-        <!-- RACE HUB -->
+        <!-- TAB 1: RACE HUB (LEADERBOARD & LOCAL TIMETABLE) -->
         <section id="hub" class="tab-content active">
             <div class="grid-dashboard">
+                
+                <!-- Live Leaderboard Card -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>
-                        Spanish Grand Prix (Madrid IFEMA Circuit)
-                        <span class="status-badge">● LIVE TIMING</span>
+                        Spanish Grand Prix — Live Leaderboard
+                        <span class="status-badge"><span class="status-dot"></span> LIVE TIMING</span>
                     </h3>
                     <table>
                         <thead>
-                            <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Gap</th><th>Tyre</th><th>Best Lap</th></tr>
+                            <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Gap / Interval</th><th>Tyre</th><th>Best Lap</th></tr>
                         </thead>
-                        <tbody>
-                            <tr><td>1</td><td><strong>K. Antonelli</strong> #12</td><td>Mercedes</td><td>LEADER</td><td><span class="compound-pill medium">M</span></td><td>1:16.820</td></tr>
-                            <tr><td>2</td><td><strong>G. Russell</strong> #63</td><td>Mercedes</td><td>+1.412s</td><td><span class="compound-pill medium">M</span></td><td>1:16.990</td></tr>
-                            <tr><td>3</td><td><strong>L. Hamilton</strong> #44</td><td>Ferrari</td><td>+3.890s</td><td><span class="compound-pill hard">H</span></td><td>1:17.110</td></tr>
-                            <tr><td>4</td><td><strong>F. Alonso</strong> #14</td><td>Aston Martin</td><td>+5.210s</td><td><span class="compound-pill soft">S</span></td><td>1:16.790</td></tr>
+                        <tbody id="leaderboard-body">
+                            <tr><td>1</td><td><span class="driver-num">#12</span> <strong>K. Antonelli</strong></td><td>Mercedes</td><td>LEADER</td><td><span class="compound-pill medium">M</span></td><td>1:16.820</td></tr>
+                            <tr><td>2</td><td><span class="driver-num">#63</span> <strong>G. Russell</strong></td><td>Mercedes</td><td>+1.412s</td><td><span class="compound-pill medium">M</span></td><td>1:16.990</td></tr>
+                            <tr><td>3</td><td><span class="driver-num">#44</span> <strong>L. Hamilton</strong></td><td>Ferrari</td><td>+3.890s</td><td><span class="compound-pill hard">H</span></td><td>1:17.110</td></tr>
+                            <tr><td>4</td><td><span class="driver-num">#4</span> <strong>L. Norris</strong></td><td>McLaren</td><td>+5.210s</td><td><span class="compound-pill medium">M</span></td><td>1:16.920</td></tr>
+                            <tr><td>5</td><td><span class="driver-num">#14</span> <strong>F. Alonso</strong></td><td>Aston Martin</td><td>+8.450s</td><td><span class="compound-pill soft">S</span></td><td>1:16.790</td></tr>
                         </tbody>
                     </table>
                 </div>
 
+                <!-- Localized Timetable -->
                 <div class="card">
                     <h3>Localized Weekend Timetable</h3>
+                    <p style="font-size:0.8rem; color:var(--f1-subtext); margin-bottom:12px;">Automatically converted to your device's timezone.</p>
                     <table>
                         <thead><tr><th>Session</th><th>Local Time</th></tr></thead>
                         <tbody id="schedule-body"></tbody>
                     </table>
                 </div>
+
             </div>
         </section>
 
-        <!-- ACCURATE MADRID CIRCUIT TELEMETRY -->
+        <!-- TAB 2: MADRID IFEMA TELEMETRY ENGINE -->
         <section id="telemetry" class="tab-content">
             <div class="grid-dashboard">
                 
+                <!-- Driver Selector & Telemetry Controls Bar -->
+                <div class="card" style="grid-column: span 2;">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px; text-transform: uppercase; font-weight: bold;">DRIVER 1 (BASE TRACE)</label>
+                            <select id="driver1-select" onchange="renderAllTelemetry()" style="background: var(--f1-light-card); color: #fff; border: 1px solid var(--soft-border); padding: 6px 12px; border-radius: 4px; font-weight: bold;">
+                                <option value="12">#12 Kimi Antonelli (Mercedes)</option>
+                                <option value="44">#44 Lewis Hamilton (Ferrari)</option>
+                                <option value="4">#4 Lando Norris (McLaren)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px; text-transform: uppercase; font-weight: bold;">DRIVER 2 (COMPARISON)</label>
+                            <select id="driver2-select" onchange="renderAllTelemetry()" style="background: var(--f1-light-card); color: #fff; border: 1px solid var(--soft-border); padding: 6px 12px; border-radius: 4px; font-weight: bold;">
+                                <option value="44">#44 Lewis Hamilton (Ferrari)</option>
+                                <option value="12">#12 Kimi Antonelli (Mercedes)</option>
+                                <option value="4">#4 Lando Norris (McLaren)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px; text-transform: uppercase; font-weight: bold;">TELEMETRY MODE</label>
+                            <button onclick="setChannelMode('overlay')" class="tele-btn active" id="btn-overlay">Overlay</button>
+                            <button onclick="setChannelMode('delta')" class="tele-btn" id="btn-delta">Delta Time</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Official 20-Turn Madrid IFEMA Circuit Canvas Map -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>
-                        Circuito de Madrid - IFEMA (2D Real Layout Tracker)
-                        <span style="font-size: 0.75rem; color: var(--f1-subtext);">5.474 km | 20 Turns</span>
+                        Circuito de Madrid — IFEMA Street Layout
+                        <span style="font-size: 0.8rem; color: var(--f1-subtext);">5.474 km | 20 Turns</span>
                     </h3>
                     <canvas id="madridTrackCanvas" height="380"></canvas>
                     <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--f1-subtext); margin-top: 8px;">
-                        <span>🏁 Start / Finish (IFEMA Hall 9)</span>
-                        <span>🔴 Heavy Braking (Turn 1 & Turn 14 Chicane)</span>
+                        <span>🏁 Start / Finish Line (Hall 9)</span>
+                        <span>🔴 Heavy Braking Zone (Turn 1 & T14 Chicane)</span>
                         <span>⚡ Valdebebas Banked Curve (Turn 10)</span>
                     </div>
                 </div>
 
+                <!-- Multi-Channel Synchronized Telemetry Graph -->
                 <div class="card" style="grid-column: span 2;">
-                    <h3>Live Speed & Throttle Trace (Madrid Circuit Sector 1 to 3)</h3>
-                    <canvas id="speedTraceCanvas" height="220"></canvas>
+                    <h3>Live Speed & Throttle Trace (Sectors 1, 2 & 3)</h3>
+                    <canvas id="telemetryTraceCanvas" height="240"></canvas>
+                    <div style="display: flex; gap: 20px; font-size: 0.75rem; margin-top: 8px; justify-content: center; flex-wrap: wrap;">
+                        <span style="color: #e10600; font-weight: bold;">― Driver 1 Speed / Throttle</span>
+                        <span style="color: #ffb800; font-weight: bold;">-- Driver 2 Speed / Throttle</span>
+                        <span style="color: #00d26a; font-weight: bold;">■ Heavy Braking Zone</span>
+                    </div>
+                </div>
+
+                <!-- Unedited Team Radio Feed -->
+                <div class="card">
+                    <h3>Unedited Team Radio Messages</h3>
+                    <div id="radio-container">
+                        <div class="radio-item">
+                            <strong style="color:var(--f1-gold);">📻 Driver Radio HAM (#44):</strong>
+                            <p style="margin-top:2px;">"Front left surface temperature spiking in Sector 2."</p>
+                        </div>
+                        <div class="radio-item">
+                            <strong style="color:var(--f1-gold);">📻 Pit to NOR (#4):</strong>
+                            <p style="margin-top:2px;">"Box for Medium compound, stay clear of pit entry line."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tyre Thermal Matrix Widget -->
+                <div class="card">
+                    <h3>Tyre Surface & Core Thermal Matrix</h3>
+                    <p style="font-size:0.75rem; color:var(--f1-subtext); margin-bottom:10px;">Internal carcass vs. surface tread temperatures (°C)</p>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; text-align:center;">
+                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #ff2a2a;">
+                            <div style="font-weight:bold; font-size:0.75rem;">FRONT LEFT</div>
+                            <div style="font-size:1.1rem; font-weight:900; color:var(--f1-gold); margin-top:2px;">112.4°C</div>
+                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 108.1°C</div>
+                        </div>
+                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #00d26a;">
+                            <div style="font-weight:bold; font-size:0.75rem;">FRONT RIGHT</div>
+                            <div style="font-size:1.1rem; font-weight:900; color:var(--accent-green); margin-top:2px;">102.1°C</div>
+                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 100.5°C</div>
+                        </div>
+                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #ffd000;">
+                            <div style="font-weight:bold; font-size:0.75rem;">REAR LEFT</div>
+                            <div style="font-size:1.1rem; font-weight:900; color:var(--f1-gold); margin-top:2px;">109.8°C</div>
+                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 107.0°C</div>
+                        </div>
+                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #00d26a;">
+                            <div style="font-weight:bold; font-size:0.75rem;">REAR RIGHT</div>
+                            <div style="font-size:1.1rem; font-weight:900; color:var(--accent-green); margin-top:2px;">101.4°C</div>
+                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 99.8°C</div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- STANDINGS -->
+        <!-- TAB 3: TRACK WEATHER & GRIP metrics -->
+        <section id="weather" class="tab-content">
+            <div class="grid-dashboard">
+                <div class="card">
+                    <h3>Circuit Environmental Weather</h3>
+                    <div class="weather-grid">
+                        <div class="metric-box">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">TRACK TEMP</span>
+                            <div class="metric-val">38.4 °C</div>
+                        </div>
+                        <div class="metric-box">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">AIR TEMP</span>
+                            <div class="metric-val">24.1 °C</div>
+                        </div>
+                        <div class="metric-box">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">RAIN PROBABILITY</span>
+                            <div class="metric-val" style="color:var(--accent-blue);">15%</div>
+                        </div>
+                        <div class="metric-box">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">WIND VELOCITY</span>
+                            <div class="metric-val">12.4 km/h</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Track Grip & Surface Evolution</h3>
+                    <p style="font-size:0.9rem; line-height:1.6; color:var(--f1-subtext);">
+                        Rubber evolution on the Madrid street surface is progressing rapidly. High lateral loads through the Valdebebas banked curve are accelerating front-left tread degradation.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: PIT STOP & STRATEGY CALCULATOR -->
+        <section id="strategy" class="tab-content">
+            <div class="grid-dashboard">
+                <div class="card">
+                    <h3>Fastest Pit Stop Rankings</h3>
+                    <table>
+                        <thead><tr><th>Team</th><th>Driver</th><th>Stop Time</th></tr></thead>
+                        <tbody>
+                            <tr><td>Red Bull Racing</td><td>VER</td><td><strong>1.98s</strong></td></tr>
+                            <tr><td>Ferrari</td><td>LEC</td><td><strong>2.12s</strong></td></tr>
+                            <tr><td>McLaren</td><td>NOR</td><td><strong>2.24s</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Undercut Probability Calculator</h3>
+                    <div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;">
+                        <input type="number" id="gapInput" placeholder="Gap to car ahead (sec)" value="1.8" step="0.1" style="background:var(--f1-light-card); color:#fff; border:1px solid var(--soft-border); padding:8px 12px; border-radius:4px; font-weight:bold;">
+                        <button onclick="calculateUndercut()" style="background:var(--f1-red); color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; font-weight:bold; text-transform:uppercase;">Simulate Pit Window</button>
+                    </div>
+                    <div id="undercut-result" style="margin-top:14px; font-weight:bold; color:var(--f1-gold);">
+                        Result: High probability of undercut success on fresh Medium compound (+1.4s gain/lap).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: CHAMPIONSHIP STANDINGS -->
         <section id="standings" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
-                    <h3>Driver Standings</h3>
+                    <h3>Driver Championship Standings</h3>
                     <table>
                         <thead><tr><th>Pos</th><th>Driver</th><th>Team</th><th>Pts</th></tr></thead>
                         <tbody id="driver-standings-body"></tbody>
                     </table>
                 </div>
+                <div class="card">
+                    <h3>Constructor Standings</h3>
+                    <table>
+                        <thead><tr><th>Pos</th><th>Team</th><th>Pts</th></tr></thead>
+                        <tbody id="constructor-standings-body"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
-        <!-- AT-TRACK FAN GUIDE -->
+        <!-- TAB 6: F1 FANTASY -->
+        <section id="fantasy" class="tab-content">
+            <div class="card">
+                <h3>Formula Recap Fantasy League</h3>
+                <p style="color:var(--f1-subtext); margin-bottom:1rem; font-size:0.9rem;">Manage your roster budget and earn points on overtakes, qualifying pace, and pit stops.</p>
+                <div style="display:flex; gap: 20px; flex-wrap: wrap;">
+                    <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; flex:1;">
+                        <h4>Active Roster</h4>
+                        <p style="font-size:0.9rem; margin-top:4px;">Antonelli, Russell, Hamilton, Norris | <strong>Mercedes AMG F1</strong></p>
+                    </div>
+                    <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; width:200px;">
+                        <h4>Remaining Budget</h4>
+                        <p style="font-size:1.5rem; font-weight:bold; color:var(--f1-gold);">$2.8M</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: AT-TRACK FAN GUIDE -->
         <section id="fanguide" class="tab-content">
             <div class="card">
-                <h3>IFEMA Madrid Circuit Fan Guide</h3>
+                <h3>Madrid IFEMA Circuit Fan Guide</h3>
                 <ul style="padding-left:20px; line-height:1.8; font-size:0.9rem;">
                     <li><strong>Metro Access:</strong> Feria de Madrid Station (Line 8) direct to Fan Zone.</li>
-                    <li><strong>Valdebebas Banked Curve Stand:</strong> Best vantage point for high-speed lateral g-force cornering.</li>
+                    <li><strong>Valdebebas Banked Curve Stand:</strong> Best vantage point for high-speed lateral cornering.</li>
                     <li><strong>IFEMA Exhibition Halls:</strong> Indoor air-conditioned hydration and dining areas.</li>
                 </ul>
             </div>
@@ -295,31 +655,18 @@
     </main>
 
     <script>
-        // Official Madrid IFEMA Street Circuit Waypoints (Normalized 0.0 to 1.0)
+        // Madrid IFEMA Circuit Coordinates (20 Turns)
         const madridTrackPoints = [
-            { x: 0.18, y: 0.75 }, // Turn 1 (IFEMA Main Straight Start/Finish)
-            { x: 0.28, y: 0.75 }, // Turn 2 (Right Entry to Valdebebas connector)
-            { x: 0.32, y: 0.68 }, // Turn 3 
-            { x: 0.38, y: 0.72 }, // Turn 4 (Valdebebas Chicane)
-            { x: 0.46, y: 0.58 }, // Turn 5 (Uphill acceleration)
-            { x: 0.54, y: 0.42 }, // Turn 6 
-            { x: 0.65, y: 0.28 }, // Turn 7 (High-speed sweeping right)
-            { x: 0.78, y: 0.20 }, // Turn 8 (Valdebebas North Turn)
-            { x: 0.88, y: 0.28 }, // Turn 9 (Entry to Banked Curve)
-            { x: 0.92, y: 0.48 }, // Turn 10 (Banked Curve Apex)
-            { x: 0.84, y: 0.65 }, // Turn 11 (Banked Exit)
-            { x: 0.72, y: 0.78 }, // Turn 12 (M-11 Highway Underpass)
-            { x: 0.60, y: 0.85 }, // Turn 13
-            { x: 0.50, y: 0.88 }, // Turn 14 (South Technical Chicane)
-            { x: 0.40, y: 0.84 }, // Turn 15
-            { x: 0.30, y: 0.88 }, // Turn 16
-            { x: 0.18, y: 0.86 }, // Turn 17 (Hairpin return to IFEMA grounds)
-            { x: 0.10, y: 0.78 }, // Turn 18
-            { x: 0.08, y: 0.65 }, // Turn 19 (Final sector loop)
-            { x: 0.12, y: 0.55 }, // Turn 20 (Final corner onto Pit Straight)
-            { x: 0.18, y: 0.75 }  // Back to Main Straight
+            { x: 0.18, y: 0.75 }, { x: 0.28, y: 0.75 }, { x: 0.32, y: 0.68 },
+            { x: 0.38, y: 0.72 }, { x: 0.46, y: 0.58 }, { x: 0.54, y: 0.42 },
+            { x: 0.65, y: 0.28 }, { x: 0.78, y: 0.20 }, { x: 0.88, y: 0.28 },
+            { x: 0.92, y: 0.48 }, { x: 0.84, y: 0.65 }, { x: 0.72, y: 0.78 },
+            { x: 0.60, y: 0.85 }, { x: 0.50, y: 0.88 }, { x: 0.40, y: 0.84 },
+            { x: 0.30, y: 0.88 }, { x: 0.18, y: 0.86 }, { x: 0.10, y: 0.78 },
+            { x: 0.08, y: 0.65 }, { x: 0.12, y: 0.55 }, { x: 0.18, y: 0.75 }
         ];
 
+        // Navigation Tab Switcher
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -328,12 +675,78 @@
             event.currentTarget.classList.add('active');
 
             if (tabId === 'telemetry') {
-                renderMadridTrack();
-                renderSpeedTrace();
+                renderAllTelemetry();
             }
         }
 
-        // Render Actual Madrid Circuit Map & Dynamic Driver Tracking
+        // Localized Session Timetable Generator
+        function loadLocalizedSchedule() {
+            const sessions = [
+                { name: "Practice 1", utc: "2026-09-18T11:30:00Z" },
+                { name: "Practice 2", utc: "2026-09-18T15:00:00Z" },
+                { name: "Qualifying", utc: "2026-09-19T14:00:00Z" },
+                { name: "Spanish Grand Prix", utc: "2026-09-20T13:00:00Z" }
+            ];
+
+            const tbody = document.getElementById('schedule-body');
+            tbody.innerHTML = sessions.map(s => {
+                const localDate = new Date(s.utc);
+                const timeString = localDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' });
+                return `<tr><td>${s.name}</td><td><strong>${timeString}</strong></td></tr>`;
+            }).join('');
+        }
+
+        // Fetch Real Standings API
+        async function fetchRealStandings() {
+            try {
+                const res = await fetch('https://api.jolpi.ca/ergast/f1/current/driverstandings.json');
+                const data = await res.json();
+                const drivers = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+
+                document.getElementById('driver-standings-body').innerHTML = drivers.slice(0, 5).map(d => `
+                    <tr><td>${d.position}</td><td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td><td>${d.Constructors[0].name}</td><td><strong>${d.points}</strong></td></tr>
+                `).join('');
+
+                const constRes = await fetch('https://api.jolpi.ca/ergast/f1/current/constructorstandings.json');
+                const constData = await constRes.json();
+                const constructors = constData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
+
+                document.getElementById('constructor-standings-body').innerHTML = constructors.map(c => `
+                    <tr><td>${c.position}</td><td><strong>${c.Constructor.name}</strong></td><td><strong>${c.points}</strong></td></tr>
+                `).join('');
+            } catch (e) {
+                document.getElementById('driver-standings-body').innerHTML = `
+                    <tr><td>1</td><td><strong>K. Antonelli</strong></td><td>Mercedes</td><td>267</td></tr>
+                    <tr><td>2</td><td><strong>G. Russell</strong></td><td>Mercedes</td><td>201</td></tr>
+                    <tr><td>3</td><td><strong>L. Hamilton</strong></td><td>Ferrari</td><td>191</td></tr>
+                `;
+                document.getElementById('constructor-standings-body').innerHTML = `
+                    <tr><td>1</td><td><strong>Mercedes AMG F1</strong></td><td>468</td></tr>
+                    <tr><td>2</td><td><strong>Scuderia Ferrari</strong></td><td>346</td></tr>
+                `;
+            }
+        }
+
+        // Strategy Calculator
+        function calculateUndercut() {
+            const gap = parseFloat(document.getElementById('gapInput').value);
+            const res = document.getElementById('undercut-result');
+            if (gap <= 2.2) {
+                res.innerHTML = `Result: High Undercut Success! Estimated outlap delta gain: ~1.5s on fresh Medium tyres.`;
+                res.style.color = 'var(--accent-green)';
+            } else {
+                res.innerHTML = `Result: Undercut Unlikely. Gap of ${gap}s exceeds single-lap tyre warmup delta.`;
+                res.style.color = 'var(--f1-red)';
+            }
+        }
+
+        // Master Telemetry Renderer
+        function renderAllTelemetry() {
+            renderMadridTrack();
+            renderSpeedTrace();
+        }
+
+        // 1. Madrid Track Canvas Renderer
         function renderMadridTrack() {
             const canvas = document.getElementById('madridTrackCanvas');
             if (!canvas) return;
@@ -346,19 +759,17 @@
             const padY = 40;
             const mapW = w - padX * 2;
             const mapH = h - padY * 2;
-
             let carProgress = 0;
 
             function animate() {
                 ctx.clearRect(0, 0, w, h);
 
-                // Draw Madrid Track Road Surface
+                // Track Base Contour Line
                 ctx.beginPath();
                 ctx.strokeStyle = "#252533";
-                ctx.lineWidth = 18;
+                ctx.lineWidth = 16;
                 ctx.lineCap = "round";
                 ctx.lineJoin = "round";
-
                 madridTrackPoints.forEach((pt, i) => {
                     const px = padX + pt.x * mapW;
                     const py = padY + pt.y * mapH;
@@ -367,10 +778,10 @@
                 });
                 ctx.stroke();
 
-                // Draw Racing Line
+                // Racing Line Accent
                 ctx.beginPath();
                 ctx.strokeStyle = "#e10600";
-                ctx.lineWidth = 4;
+                ctx.lineWidth = 3.5;
                 madridTrackPoints.forEach((pt, i) => {
                     const px = padX + pt.x * mapW;
                     const py = padY + pt.y * mapH;
@@ -379,20 +790,16 @@
                 });
                 ctx.stroke();
 
-                // Draw Turn Markers
+                // Turn Numbers
                 madridTrackPoints.slice(0, 20).forEach((pt, i) => {
                     const px = padX + pt.x * mapW;
                     const py = padY + pt.y * mapH;
-                    ctx.beginPath();
-                    ctx.fillStyle = "rgba(255,255,255,0.7)";
-                    ctx.arc(px, py, 3, 0, 2 * Math.PI);
-                    ctx.fill();
-                    ctx.fillStyle = "#a0a0b0";
-                    ctx.font = "9px sans-serif";
-                    ctx.fillText(`T${i + 1}`, px + 6, py - 4);
+                    ctx.fillStyle = "#9494a8";
+                    ctx.font = "bold 9px sans-serif";
+                    ctx.fillText(`T${i + 1}`, px + 5, py - 4);
                 });
 
-                // Calculate Live Driver Positioning on Madrid Layout
+                // Live Driver GPS Marker
                 const totalPts = madridTrackPoints.length - 1;
                 const currIndex = Math.floor(carProgress);
                 const nextIndex = (currIndex + 1) % madridTrackPoints.length;
@@ -404,7 +811,6 @@
                 const carX = padX + (p1.x + (p2.x - p1.x) * segmentT) * mapW;
                 const carY = padY + (p1.y + (p2.y - p1.y) * segmentT) * mapH;
 
-                // Driver Dot (#12 Antonelli)
                 ctx.beginPath();
                 ctx.fillStyle = "#00d26a";
                 ctx.arc(carX, carY, 8, 0, 2 * Math.PI);
@@ -419,8 +825,9 @@
             animate();
         }
 
+        // 2. Multi-Channel Speed Trace Graph
         function renderSpeedTrace() {
-            const canvas = document.getElementById('speedTraceCanvas');
+            const canvas = document.getElementById('telemetryTraceCanvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             canvas.width = canvas.parentElement.clientWidth - 40;
@@ -432,29 +839,25 @@
             ctx.strokeStyle = "#e10600";
             ctx.lineWidth = 2.5;
 
-            for (let x = 0; x < w; x += 5) {
-                const y = h - (Math.sin(x * 0.03) * (h * 0.35) + (h * 0.45));
+            for (let x = 0; x < w; x += 6) {
+                const y = h - (Math.sin(x * 0.02) * (h * 0.35) + (h * 0.45));
                 if (x === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
         }
 
-        function loadLocalizedSchedule() {
-            const sessions = [
-                { name: "Practice 1", utc: "2026-09-18T11:30:00Z" },
-                { name: "Practice 2", utc: "2026-09-18T15:00:00Z" },
-                { name: "Qualifying", utc: "2026-09-19T14:00:00Z" },
-                { name: "Madrid Grand Prix", utc: "2026-09-20T13:00:00Z" }
-            ];
-            document.getElementById('schedule-body').innerHTML = sessions.map(s => {
-                const local = new Date(s.utc).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' });
-                return `<tr><td>${s.name}</td><td><strong>${local}</strong></td></tr>`;
-            }).join('');
+        function setChannelMode(mode) {
+            document.querySelectorAll('.tele-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + mode).classList.add('active');
+            renderAllTelemetry();
         }
+
+        window.addEventListener('resize', renderAllTelemetry);
 
         window.onload = function() {
             loadLocalizedSchedule();
+            fetchRealStandings();
         };
     </script>
 </body>
