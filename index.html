@@ -39,7 +39,6 @@
             overflow-x: hidden;
         }
 
-        /* F1 Top Header & Branding */
         header {
             background-color: #000;
             border-bottom: 4px solid var(--f1-red);
@@ -89,7 +88,6 @@
             transform: skewX(-12deg);
         }
 
-        /* Nav Tab Bar */
         .nav-links {
             display: flex;
             gap: 6px;
@@ -148,7 +146,6 @@
             text-transform: uppercase;
         }
 
-        /* Main Container */
         main {
             flex: 1;
             max-width: 1440px;
@@ -160,7 +157,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Dashboard Responsive Grid */
         .grid-dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -201,7 +197,6 @@
             align-items: center;
         }
 
-        /* Tables */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -343,7 +338,6 @@
             border-left: 4px solid var(--f1-red);
         }
 
-        /* Race List Layout */
         .race-list-item {
             display: flex;
             align-items: center;
@@ -403,11 +397,9 @@
 
     <main>
 
-        <!-- TAB 1: RACE HUB (LEADERBOARD, LOCAL TIMETABLE, & UPCOMING RACES) -->
+        <!-- TAB 1: RACE HUB -->
         <section id="hub" class="tab-content active">
             <div class="grid-dashboard">
-                
-                <!-- Live Leaderboard Card -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>
                         Spanish Grand Prix — Live Leaderboard
@@ -427,7 +419,6 @@
                     </table>
                 </div>
 
-                <!-- Localized Timetable Card -->
                 <div class="card">
                     <h3>Current Event Schedule</h3>
                     <p style="font-size:0.8rem; color:var(--f1-subtext); margin-bottom:12px;">Auto-adjusted to your device clock.</p>
@@ -437,7 +428,6 @@
                     </table>
                 </div>
 
-                <!-- NEW: UPCOMING RACES CARD -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>
                         Upcoming 2026 Grand Prix Calendar
@@ -476,31 +466,8 @@
                                 <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">16–18 OCT 2026</div>
                             </div>
                         </div>
-
-                        <div class="race-list-item">
-                            <div>
-                                <strong style="font-size:0.95rem; color:#fff;">ROUND 19: Mexico City Grand Prix</strong>
-                                <div style="font-size:0.8rem; color:var(--f1-subtext);">Autódromo Hermanos Rodríguez</div>
-                            </div>
-                            <div style="text-align:right;">
-                                <span style="font-size:0.75rem; color:var(--f1-subtext); font-weight:bold;">UPCOMING</span>
-                                <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">23–25 OCT 2026</div>
-                            </div>
-                        </div>
-
-                        <div class="race-list-item">
-                            <div>
-                                <strong style="font-size:0.95rem; color:#fff;">ROUND 20: São Paulo Grand Prix</strong>
-                                <div style="font-size:0.8rem; color:var(--f1-subtext);">Autódromo José Carlos Pace (Interlagos)</div>
-                            </div>
-                            <div style="text-align:right;">
-                                <span style="font-size:0.75rem; color:var(--f1-subtext); font-weight:bold;">UPCOMING</span>
-                                <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">06–08 NOV 2026</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -535,8 +502,8 @@
 
                 <div class="card" style="grid-column: span 2;">
                     <h3>
-                        Circuito de Madrid — IFEMA Street Layout
-                        <span style="font-size: 0.8rem; color: var(--f1-subtext);">5.474 km | 20 Turns</span>
+                        Circuito de Madrid — IFEMA Smooth Layout
+                        <span style="font-size: 0.8rem; color: var(--f1-subtext);">5.474 km | 20 Smooth Curves</span>
                     </h3>
                     <canvas id="madridTrackCanvas" height="380"></canvas>
                     <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--f1-subtext); margin-top: 8px;">
@@ -549,61 +516,15 @@
                 <div class="card" style="grid-column: span 2;">
                     <h3>Live Speed & Throttle Trace (Sectors 1, 2 & 3)</h3>
                     <canvas id="telemetryTraceCanvas" height="240"></canvas>
-                    <div style="display: flex; gap: 20px; font-size: 0.75rem; margin-top: 8px; justify-content: center; flex-wrap: wrap;">
-                        <span style="color: #e10600; font-weight: bold;">― Driver 1 Speed / Throttle</span>
-                        <span style="color: #ffb800; font-weight: bold;">-- Driver 2 Speed / Throttle</span>
-                        <span style="color: #00d26a; font-weight: bold;">■ Heavy Braking Zone</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3>Unedited Team Radio Messages</h3>
-                    <div id="radio-container">
-                        <div class="radio-item">
-                            <strong style="color:var(--f1-gold);">📻 Driver Radio HAM (#44):</strong>
-                            <p style="margin-top:2px;">"Front left surface temperature spiking in Sector 2."</p>
-                        </div>
-                        <div class="radio-item">
-                            <strong style="color:var(--f1-gold);">📻 Pit to NOR (#4):</strong>
-                            <p style="margin-top:2px;">"Box for Medium compound, stay clear of pit entry line."</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3>Tyre Surface & Core Thermal Matrix</h3>
-                    <p style="font-size:0.75rem; color:var(--f1-subtext); margin-bottom:10px;">Internal carcass vs. surface tread temperatures (°C)</p>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; text-align:center;">
-                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #ff2a2a;">
-                            <div style="font-weight:bold; font-size:0.75rem;">FRONT LEFT</div>
-                            <div style="font-size:1.1rem; font-weight:900; color:var(--f1-gold); margin-top:2px;">112.4°C</div>
-                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 108.1°C</div>
-                        </div>
-                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #00d26a;">
-                            <div style="font-weight:bold; font-size:0.75rem;">FRONT RIGHT</div>
-                            <div style="font-size:1.1rem; font-weight:900; color:var(--accent-green); margin-top:2px;">102.1°C</div>
-                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 100.5°C</div>
-                        </div>
-                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #ffd000;">
-                            <div style="font-weight:bold; font-size:0.75rem;">REAR LEFT</div>
-                            <div style="font-size:1.1rem; font-weight:900; color:var(--f1-gold); margin-top:2px;">109.8°C</div>
-                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 107.0°C</div>
-                        </div>
-                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #00d26a;">
-                            <div style="font-weight:bold; font-size:0.75rem;">REAR RIGHT</div>
-                            <div style="font-size:1.1rem; font-weight:900; color:var(--accent-green); margin-top:2px;">101.4°C</div>
-                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 99.8°C</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 3: TRACK WEATHER & GRIP -->
+        <!-- TAB 3: WEATHER -->
         <section id="weather" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
-                    <h3>Circuit Environmental Weather</h3>
+                    <h3>Circuit Weather</h3>
                     <div class="weather-grid">
                         <div class="metric-box">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">TRACK TEMP</span>
@@ -613,107 +534,57 @@
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">AIR TEMP</span>
                             <div class="metric-val">24.1 °C</div>
                         </div>
-                        <div class="metric-box">
-                            <span style="font-size:0.75rem; color:var(--f1-subtext);">RAIN PROBABILITY</span>
-                            <div class="metric-val" style="color:var(--accent-blue);">15%</div>
-                        </div>
-                        <div class="metric-box">
-                            <span style="font-size:0.75rem; color:var(--f1-subtext);">WIND VELOCITY</span>
-                            <div class="metric-val">12.4 km/h</div>
-                        </div>
                     </div>
-                </div>
-
-                <div class="card" style="grid-column: span 2;">
-                    <h3>Track Grip & Surface Evolution</h3>
-                    <p style="font-size:0.9rem; line-height:1.6; color:var(--f1-subtext);">
-                        Rubber evolution on the Madrid street surface is progressing rapidly. High lateral loads through the Valdebebas banked curve are accelerating front-left tread degradation.
-                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 4: PIT STOP & STRATEGY -->
+        <!-- TAB 4: STRATEGY -->
         <section id="strategy" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
-                    <h3>Fastest Pit Stop Rankings</h3>
+                    <h3>Pit Stops</h3>
                     <table>
                         <thead><tr><th>Team</th><th>Driver</th><th>Stop Time</th></tr></thead>
-                        <tbody>
-                            <tr><td>Red Bull Racing</td><td>VER</td><td><strong>1.98s</strong></td></tr>
-                            <tr><td>Ferrari</td><td>LEC</td><td><strong>2.12s</strong></td></tr>
-                            <tr><td>McLaren</td><td>NOR</td><td><strong>2.24s</strong></td></tr>
-                        </tbody>
+                        <tbody><tr><td>Red Bull</td><td>VER</td><td><strong>1.98s</strong></td></tr></tbody>
                     </table>
-                </div>
-
-                <div class="card" style="grid-column: span 2;">
-                    <h3>Undercut Probability Calculator</h3>
-                    <div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;">
-                        <input type="number" id="gapInput" placeholder="Gap to car ahead (sec)" value="1.8" step="0.1" style="background:var(--f1-light-card); color:#fff; border:1px solid var(--soft-border); padding:8px 12px; border-radius:4px; font-weight:bold;">
-                        <button onclick="calculateUndercut()" style="background:var(--f1-red); color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; font-weight:bold; text-transform:uppercase;">Simulate Pit Window</button>
-                    </div>
-                    <div id="undercut-result" style="margin-top:14px; font-weight:bold; color:var(--f1-gold);">
-                        Result: High probability of undercut success on fresh Medium compound (+1.4s gain/lap).
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 5: CHAMPIONSHIP STANDINGS -->
+        <!-- TAB 5: STANDINGS -->
         <section id="standings" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
-                    <h3>Driver Championship Standings</h3>
+                    <h3>Driver Standings</h3>
                     <table>
                         <thead><tr><th>Pos</th><th>Driver</th><th>Team</th><th>Pts</th></tr></thead>
                         <tbody id="driver-standings-body"></tbody>
                     </table>
                 </div>
-                <div class="card">
-                    <h3>Constructor Standings</h3>
-                    <table>
-                        <thead><tr><th>Pos</th><th>Team</th><th>Pts</th></tr></thead>
-                        <tbody id="constructor-standings-body"></tbody>
-                    </table>
-                </div>
             </div>
         </section>
 
-        <!-- TAB 6: F1 FANTASY -->
+        <!-- TAB 6: FANTASY -->
         <section id="fantasy" class="tab-content">
             <div class="card">
-                <h3>Formula Recap Fantasy League</h3>
-                <p style="color:var(--f1-subtext); margin-bottom:1rem; font-size:0.9rem;">Manage your roster budget and earn points on overtakes, qualifying pace, and pit stops.</p>
-                <div style="display:flex; gap: 20px; flex-wrap: wrap;">
-                    <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; flex:1;">
-                        <h4>Active Roster</h4>
-                        <p style="font-size:0.9rem; margin-top:4px;">Antonelli, Russell, Hamilton, Norris | <strong>Mercedes AMG F1</strong></p>
-                    </div>
-                    <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; width:200px;">
-                        <h4>Remaining Budget</h4>
-                        <p style="font-size:1.5rem; font-weight:bold; color:var(--f1-gold);">$2.8M</p>
-                    </div>
-                </div>
+                <h3>F1 Fantasy League</h3>
+                <p style="color:var(--f1-subtext);">Active Roster: Antonelli, Russell, Hamilton, Norris</p>
             </div>
         </section>
 
-        <!-- TAB 7: AT-TRACK FAN GUIDE -->
+        <!-- TAB 7: FAN GUIDE -->
         <section id="fanguide" class="tab-content">
             <div class="card">
-                <h3>Madrid IFEMA Circuit Fan Guide</h3>
-                <ul style="padding-left:20px; line-height:1.8; font-size:0.9rem;">
-                    <li><strong>Metro Access:</strong> Feria de Madrid Station (Line 8) direct to Fan Zone.</li>
-                    <li><strong>Valdebebas Banked Curve Stand:</strong> Best vantage point for high-speed lateral cornering.</li>
-                    <li><strong>IFEMA Exhibition Halls:</strong> Indoor air-conditioned hydration and dining areas.</li>
-                </ul>
+                <h3>Madrid Fan Guide</h3>
+                <p style="color:var(--f1-subtext);">Metro Line 8 direct to Feria de Madrid.</p>
             </div>
         </section>
 
     </main>
 
     <script>
+        // Madrid IFEMA Master Control Points
         const madridTrackPoints = [
             { x: 0.18, y: 0.75 }, { x: 0.28, y: 0.75 }, { x: 0.32, y: 0.68 },
             { x: 0.38, y: 0.72 }, { x: 0.46, y: 0.58 }, { x: 0.54, y: 0.42 },
@@ -721,8 +592,10 @@
             { x: 0.92, y: 0.48 }, { x: 0.84, y: 0.65 }, { x: 0.72, y: 0.78 },
             { x: 0.60, y: 0.85 }, { x: 0.50, y: 0.88 }, { x: 0.40, y: 0.84 },
             { x: 0.30, y: 0.88 }, { x: 0.18, y: 0.86 }, { x: 0.10, y: 0.78 },
-            { x: 0.08, y: 0.65 }, { x: 0.12, y: 0.55 }, { x: 0.18, y: 0.75 }
+            { x: 0.08, y: 0.65 }, { x: 0.12, y: 0.55 }
         ];
+
+        let animationFrameId = null;
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -761,45 +634,22 @@
                 document.getElementById('driver-standings-body').innerHTML = drivers.slice(0, 5).map(d => `
                     <tr><td>${d.position}</td><td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td><td>${d.Constructors[0].name}</td><td><strong>${d.points}</strong></td></tr>
                 `).join('');
-
-                const constRes = await fetch('https://api.jolpi.ca/ergast/f1/current/constructorstandings.json');
-                const constData = await constRes.json();
-                const constructors = constData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
-
-                document.getElementById('constructor-standings-body').innerHTML = constructors.map(c => `
-                    <tr><td>${c.position}</td><td><strong>${c.Constructor.name}</strong></td><td><strong>${c.points}</strong></td></tr>
-                `).join('');
             } catch (e) {
                 document.getElementById('driver-standings-body').innerHTML = `
                     <tr><td>1</td><td><strong>K. Antonelli</strong></td><td>Mercedes</td><td>267</td></tr>
                     <tr><td>2</td><td><strong>G. Russell</strong></td><td>Mercedes</td><td>201</td></tr>
-                    <tr><td>3</td><td><strong>L. Hamilton</strong></td><td>Ferrari</td><td>191</td></tr>
                 `;
-                document.getElementById('constructor-standings-body').innerHTML = `
-                    <tr><td>1</td><td><strong>Mercedes AMG F1</strong></td><td>468</td></tr>
-                    <tr><td>2</td><td><strong>Scuderia Ferrari</strong></td><td>346</td></tr>
-                `;
-            }
-        }
-
-        function calculateUndercut() {
-            const gap = parseFloat(document.getElementById('gapInput').value);
-            const res = document.getElementById('undercut-result');
-            if (gap <= 2.2) {
-                res.innerHTML = `Result: High Undercut Success! Estimated outlap delta gain: ~1.5s on fresh Medium tyres.`;
-                res.style.color = 'var(--accent-green)';
-            } else {
-                res.innerHTML = `Result: Undercut Unlikely. Gap of ${gap}s exceeds single-lap tyre warmup delta.`;
-                res.style.color = 'var(--f1-red)';
             }
         }
 
         function renderAllTelemetry() {
-            renderMadridTrack();
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            renderSmoothMadridTrack();
             renderSpeedTrace();
         }
 
-        function renderMadridTrack() {
+        // SMOOTH BEZIER SPLINE CANVAS RENDERER
+        function renderSmoothMadridTrack() {
             const canvas = document.getElementById('madridTrackCanvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
@@ -811,66 +661,93 @@
             const padY = 40;
             const mapW = w - padX * 2;
             const mapH = h - padY * 2;
-            let carProgress = 0;
 
-            function animate() {
+            // Convert normalized points to canvas coordinates
+            const canvasPts = madridTrackPoints.map(pt => ({
+                x: padX + pt.x * mapW,
+                y: padY + pt.y * mapH
+            }));
+
+            // Pre-sample high-density points along Quadratic Bezier splines for smooth animation
+            const smoothPath = [];
+            const samplesPerSegment = 24;
+
+            for (let i = 0; i < canvasPts.length; i++) {
+                const pPrev = canvasPts[(i - 1 + canvasPts.length) % canvasPts.length];
+                const pCurr = canvasPts[i];
+                const pNext = canvasPts[(i + 1) % canvasPts.length];
+
+                const startX = (pPrev.x + pCurr.x) / 2;
+                const startY = (pPrev.y + pCurr.y) / 2;
+                const endX = (pCurr.x + pNext.x) / 2;
+                const endY = (pCurr.y + pNext.y) / 2;
+
+                for (let t = 0; t < 1; t += 1 / samplesPerSegment) {
+                    const bx = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * pCurr.x + t * t * endX;
+                    const by = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * pCurr.y + t * t * endY;
+                    smoothPath.push({ x: bx, y: by });
+                }
+            }
+
+            let pathIndex = 0;
+
+            function drawSmoothLoop() {
                 ctx.clearRect(0, 0, w, h);
 
-                ctx.beginPath();
+                // Helper to draw smooth spline path
+                function traceSpline() {
+                    ctx.beginPath();
+                    const pLast = canvasPts[canvasPts.length - 1];
+                    const pFirst = canvasPts[0];
+                    ctx.moveTo((pLast.x + pFirst.x) / 2, (pLast.y + pFirst.y) / 2);
+
+                    for (let i = 0; i < canvasPts.length; i++) {
+                        const pCurr = canvasPts[i];
+                        const pNext = canvasPts[(i + 1) % canvasPts.length];
+                        const nextMidX = (pCurr.x + pNext.x) / 2;
+                        const nextMidY = (pCurr.y + pNext.y) / 2;
+                        ctx.quadraticCurveTo(pCurr.x, pCurr.y, nextMidX, nextMidY);
+                    }
+                }
+
+                // 1. Draw Outer Road Surface (Thick Gray)
+                traceSpline();
                 ctx.strokeStyle = "#252533";
-                ctx.lineWidth = 16;
+                ctx.lineWidth = 18;
                 ctx.lineCap = "round";
                 ctx.lineJoin = "round";
-                madridTrackPoints.forEach((pt, i) => {
-                    const px = padX + pt.x * mapW;
-                    const py = padY + pt.y * mapH;
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
-                });
                 ctx.stroke();
 
-                ctx.beginPath();
+                // 2. Draw Smooth Red Racing Line
+                traceSpline();
                 ctx.strokeStyle = "#e10600";
                 ctx.lineWidth = 3.5;
-                madridTrackPoints.forEach((pt, i) => {
-                    const px = padX + pt.x * mapW;
-                    const py = padY + pt.y * mapH;
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
-                });
                 ctx.stroke();
 
-                madridTrackPoints.slice(0, 20).forEach((pt, i) => {
-                    const px = padX + pt.x * mapW;
-                    const py = padY + pt.y * mapH;
+                // 3. Draw Turn Labels at Spline Anchors
+                canvasPts.forEach((pt, i) => {
                     ctx.fillStyle = "#9494a8";
                     ctx.font = "bold 9px sans-serif";
-                    ctx.fillText(`T${i + 1}`, px + 5, py - 4);
+                    ctx.fillText(`T${i + 1}`, pt.x + 6, pt.y - 4);
                 });
 
-                const totalPts = madridTrackPoints.length - 1;
-                const currIndex = Math.floor(carProgress);
-                const nextIndex = (currIndex + 1) % madridTrackPoints.length;
-                const segmentT = carProgress - currIndex;
+                // 4. Draw Driver Marker (#12 Antonelli) smoothly navigating path
+                const carPos = smoothPath[Math.floor(pathIndex)];
+                if (carPos) {
+                    ctx.beginPath();
+                    ctx.fillStyle = "#00d26a";
+                    ctx.arc(carPos.x, carPos.y, 8, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.fillStyle = "#fff";
+                    ctx.font = "bold 10px sans-serif";
+                    ctx.fillText("12", carPos.x - 5, carPos.y - 12);
+                }
 
-                const p1 = madridTrackPoints[currIndex];
-                const p2 = madridTrackPoints[nextIndex];
-
-                const carX = padX + (p1.x + (p2.x - p1.x) * segmentT) * mapW;
-                const carY = padY + (p1.y + (p2.y - p1.y) * segmentT) * mapH;
-
-                ctx.beginPath();
-                ctx.fillStyle = "#00d26a";
-                ctx.arc(carX, carY, 8, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.fillStyle = "#fff";
-                ctx.font = "bold 10px sans-serif";
-                ctx.fillText("12", carX - 5, carY - 12);
-
-                carProgress = (carProgress + 0.02) % totalPts;
-                requestAnimationFrame(animate);
+                pathIndex = (pathIndex + 1.2) % smoothPath.length;
+                animationFrameId = requestAnimationFrame(drawSmoothLoop);
             }
-            animate();
+
+            drawSmoothLoop();
         }
 
         function renderSpeedTrace() {
