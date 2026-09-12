@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formula Recap | All-in-One F1 Race Hub & Real-Time Telemetry</title>
+    <title>Formula Recap | Ultimate All-in-One F1 Telemetry & Race Hub</title>
     <style>
         :root {
             --f1-red: #e10600;
@@ -13,8 +13,9 @@
             --f1-text: #f1f1f1;
             --f1-subtext: #a0a0b0;
             --f1-gold: #ffb800;
-            --soft-border: rgba(255, 255, 255, 0.1);
             --accent-green: #00d26a;
+            --accent-blue: #3b82f6;
+            --soft-border: rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -32,7 +33,7 @@
             min-height: 100vh;
         }
 
-        /* Top Navigation Bar */
+        /* Top Navigation Header */
         header {
             background-color: #000;
             border-bottom: 3px solid var(--f1-red);
@@ -56,23 +57,17 @@
             letter-spacing: -1px;
             color: #fff;
             text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .brand span {
-            color: var(--f1-red);
-        }
+        .brand span { color: var(--f1-red); }
 
         .nav-links {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             list-style: none;
             overflow-x: auto;
             white-space: nowrap;
             padding: 5px 0;
-            -webkit-overflow-scrolling: touch;
         }
 
         .nav-links button {
@@ -80,11 +75,11 @@
             border: none;
             color: var(--f1-subtext);
             font-weight: 600;
-            font-size: 0.9rem;
-            padding: 8px 14px;
+            font-size: 0.85rem;
+            padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: 0.2s;
         }
 
         .nav-links button.active, .nav-links button:hover {
@@ -92,43 +87,33 @@
             background-color: var(--f1-light-card);
         }
 
-        /* Broadcast Disclaimer Banner */
-        .f1tv-disclaimer {
+        .f1tv-banner {
             background: #111;
             border-bottom: 1px solid var(--soft-border);
             text-align: center;
-            padding: 8px 14px;
+            padding: 8px;
             font-size: 0.8rem;
             color: var(--f1-subtext);
         }
 
-        .f1tv-disclaimer a {
-            color: var(--f1-red);
-            text-decoration: none;
-            font-weight: 700;
-        }
+        .f1tv-banner a { color: var(--f1-red); text-decoration: none; font-weight: bold; }
 
-        /* Layout & Container */
+        /* Main Container */
         main {
             flex: 1;
             max-width: 1400px;
             width: 100%;
             margin: 0 auto;
-            padding: 1.5rem;
+            padding: 1.25rem;
         }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .grid-dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         .card {
@@ -140,62 +125,64 @@
         }
 
         .card h3 {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             margin-bottom: 1rem;
             border-bottom: 1px solid var(--soft-border);
-            padding-bottom: 0.6rem;
+            padding-bottom: 0.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        /* Data Tables */
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
         }
 
         th, td {
-            padding: 9px 12px;
+            padding: 8px 10px;
             text-align: left;
             border-bottom: 1px solid var(--soft-border);
         }
 
-        th {
-            color: var(--f1-subtext);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
+        th { color: var(--f1-subtext); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+
+        /* Metric Widgets */
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
         }
 
-        /* Interactive Canvas & Telemetry Traces */
-        #gpsTrackCanvas {
-            width: 100%;
-            height: 340px;
-            background-color: #0d0d12;
-            border-radius: 8px;
-            border: 1px solid var(--soft-border);
-        }
-
-        .telemetry-trace {
-            width: 100%;
-            height: 130px;
-            background: #0d0d12;
+        .metric-box {
+            background: var(--f1-light-card);
+            padding: 12px;
             border-radius: 6px;
-            margin-top: 8px;
+            text-align: center;
+        }
+
+        .metric-val {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--f1-gold);
+            margin-top: 4px;
+        }
+
+        canvas {
+            width: 100%;
+            background-color: #0d0d12;
+            border-radius: 6px;
             border: 1px solid var(--soft-border);
         }
 
-        /* Compound Indicators */
         .compound-pill {
             display: inline-block;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             text-align: center;
-            line-height: 24px;
+            line-height: 22px;
             font-weight: 800;
             font-size: 0.75rem;
             color: #000;
@@ -203,288 +190,186 @@
         .soft { background-color: #ff2a2a; color: #fff; }
         .medium { background-color: #ffd000; }
         .hard { background-color: #ffffff; }
-        .intermediate { background-color: #00d26a; color: #fff; }
 
-        .radio-item {
-            background: #111;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--f1-red);
-        }
-
-        .radio-item audio {
-            width: 100%;
-            height: 30px;
-            margin-top: 6px;
-        }
-
-        .status-badge {
-            background: rgba(0, 210, 106, 0.15);
-            color: var(--accent-green);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        /* Mobile Optimization */
         @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-                padding: 1rem;
-            }
-            .nav-links {
-                width: 100%;
-            }
-            main {
-                padding: 0.8rem;
-            }
-            .grid-dashboard {
-                grid-template-columns: 1fr;
-            }
-            .card[style*="grid-column: span 2"] {
-                grid-column: span 1 !important;
-            }
+            .navbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+            main { padding: 0.75rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
     <header>
         <div class="navbar">
             <div class="brand">Formula <span>Recap</span></div>
             <ul class="nav-links">
                 <li><button class="tab-btn active" onclick="switchTab('hub')">Race Hub</button></li>
                 <li><button class="tab-btn" onclick="switchTab('telemetry')">Live Telemetry</button></li>
+                <li><button class="tab-btn" onclick="switchTab('weather')">Weather & Track</button></li>
+                <li><button class="tab-btn" onclick="switchTab('strategy')">Pit & Strategy</button></li>
                 <li><button class="tab-btn" onclick="switchTab('standings')">Standings</button></li>
-                <li><button class="tab-btn" onclick="switchTab('highlights')">Highlights & News</button></li>
                 <li><button class="tab-btn" onclick="switchTab('fantasy')">F1 Fantasy</button></li>
-                <li><button class="tab-btn" onclick="switchTab('fanguide')">At-Track Guide</button></li>
+                <li><button class="tab-btn" onclick="switchTab('fanguide')">Fan Guide</button></li>
             </ul>
         </div>
     </header>
 
-    <!-- F1 TV Official Broadcast Notice Banner -->
-    <div class="f1tv-disclaimer">
-        ℹ️ Live telemetry, GPS tracking, timing data & team audio are completely free on Formula Recap. <strong>Live video broadcast streaming & onboard camera feeds</strong> require the official <a href="https://f1tv.formula1.com" target="_blank" rel="noopener">F1 TV App</a>.
+    <div class="f1tv-banner">
+        ℹ️ Live timing, telemetry & strategy analytics on Formula Recap are free. Video broadcasts & driver cameras require the <a href="https://f1tv.formula1.com" target="_blank">F1 TV App</a>.
     </div>
 
-    <!-- Main Content Application -->
     <main>
 
-        <!-- TAB 1: RACE HUB (LEADERBOARD & LOCAL TIMETABLE) -->
+        <!-- TAB 1: RACE HUB -->
         <section id="hub" class="tab-content active">
             <div class="grid-dashboard">
-                
-                <!-- Live Leaderboard -->
                 <div class="card" style="grid-column: span 2;">
-                    <h3>
-                        Live Race Leaderboard 
-                        <span class="status-badge" id="live-status">LIVE TIMING</span>
-                    </h3>
+                    <h3>Live Race Leaderboard <span style="color:var(--accent-green); font-size:0.8rem;">● LIVE</span></h3>
                     <table>
                         <thead>
-                            <tr>
-                                <th>Pos</th>
-                                <th>Driver</th>
-                                <th>Team</th>
-                                <th>Gap / Interval</th>
-                                <th>Tyre Compound</th>
-                                <th>Best Lap</th>
-                            </tr>
+                            <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Gap</th><th>Tyre</th><th>Best Lap</th></tr>
                         </thead>
                         <tbody id="leaderboard-body">
-                            <!-- Dynamically populated via OpenF1 / Fallback Data -->
+                            <tr><td>1</td><td><strong>K. Antonelli</strong></td><td>Mercedes</td><td>LEADER</td><td><span class="compound-pill medium">M</span></td><td>1:18.421</td></tr>
+                            <tr><td>2</td><td><strong>G. Russell</strong></td><td>Mercedes</td><td>+1.842s</td><td><span class="compound-pill medium">M</span></td><td>1:18.590</td></tr>
+                            <tr><td>3</td><td><strong>L. Hamilton</strong></td><td>Ferrari</td><td>+4.210s</td><td><span class="compound-pill hard">H</span></td><td>1:18.910</td></tr>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Localized Timetable -->
                 <div class="card">
-                    <h3>Localized Race Weekend Schedule</h3>
-                    <p style="font-size:0.8rem; color:var(--f1-subtext); margin-bottom:12px;">Times auto-converted to your local device clock.</p>
-                    <table id="schedule-table">
-                        <thead>
-                            <tr><th>Session</th><th>Local Time</th></tr>
-                        </thead>
-                        <tbody id="schedule-body">
-                            <!-- Auto Populated by JS -->
-                        </tbody>
+                    <h3>Localized Weekend Timetable</h3>
+                    <table>
+                        <thead><tr><th>Session</th><th>Local Time</th></tr></thead>
+                        <tbody id="schedule-body"></tbody>
                     </table>
                 </div>
-
             </div>
         </section>
 
-        <!-- TAB 2: LIVE TELEMETRY HUB -->
+        <!-- TAB 2: ADVANCED TELEMETRY HUB -->
         <section id="telemetry" class="tab-content">
             <div class="grid-dashboard">
-                
-                <!-- Real-Time 2D GPS Driver Tracker Canvas -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>Real-Time 2D GPS Driver Tracker Map</h3>
-                    <canvas id="gpsTrackCanvas"></canvas>
+                    <canvas id="gpsCanvas" height="320"></canvas>
                 </div>
 
-                <!-- Live Speed & Throttle Telemetry Graph -->
-                <div class="card">
-                    <h3>Driver Speed & Throttle Trace</h3>
-                    <p style="font-size: 0.8rem; color: var(--f1-subtext);">Comparison: Driver #1 vs Driver #2</p>
-                    <svg class="telemetry-trace" viewBox="0 0 300 120" preserveAspectRatio="none">
-                        <path d="M 0 100 Q 40 20, 80 90 T 160 30 T 240 110 T 300 10" fill="none" stroke="#e10600" stroke-width="2.5"/>
-                        <path d="M 0 90 Q 40 30, 80 80 T 160 40 T 240 95 T 300 20" fill="none" stroke="#ffb800" stroke-width="2.5" stroke-dasharray="4"/>
-                    </svg>
-                    <div style="font-size: 0.75rem; display: flex; gap: 14px; margin-top: 8px;">
-                        <span style="color:#e10600;">■ Lead Car Throttle %</span>
-                        <span style="color:#ffb800;">■ Chasing Car Throttle %</span>
-                    </div>
-                </div>
-
-                <!-- Unedited Team Radio Feed -->
-                <div class="card">
-                    <h3>Unedited Team Radio Messages</h3>
-                    <div id="radio-container">
-                        <div class="radio-item">
-                            <strong style="color:var(--f1-gold);">📻 [Driver Radio] HAM (#44):</strong>
-                            <p style="margin-top:4px;">"Tires are beginning to drop off in sector 2."</p>
-                        </div>
-                        <div class="radio-item">
-                            <strong style="color:var(--f1-gold);">📻 [Pit-to-Car] PIT to NOR (#4):</strong>
-                            <p style="margin-top:4px;">"Box this lap, stay clear of the pit entry white line."</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tyre Strategy History -->
                 <div class="card" style="grid-column: span 2;">
-                    <h3>Stint & Tyre Strategy History</h3>
+                    <h3>Synchronized Speed & Throttle Telemetry Trace</h3>
+                    <canvas id="telemetryTrace" height="240"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: LIVE WEATHER & TRACK CONDITIONS -->
+        <section id="weather" class="tab-content">
+            <div class="grid-dashboard">
+                <div class="card">
+                    <h3>Circuit Environment Metrics</h3>
+                    <div class="weather-grid">
+                        <div class="metric-box">
+                            <span style="font-size:0.8rem; color:var(--f1-subtext);">TRACK TEMP</span>
+                            <div class="metric-val" id="track-temp">38.4 °C</div>
+                        </div>
+                        <div class="metric-box">
+                            <span style="font-size:0.8rem; color:var(--f1-subtext);">AIR TEMP</span>
+                            <div class="metric-val" id="air-temp">24.1 °C</div>
+                        </div>
+                        <div class="metric-box">
+                            <span style="font-size:0.8rem; color:var(--f1-subtext);">RAIN PROBABILITY</span>
+                            <div class="metric-val" style="color:var(--accent-blue);">15%</div>
+                        </div>
+                        <div class="metric-box">
+                            <span style="font-size:0.8rem; color:var(--f1-subtext);">WIND VELOCITY</span>
+                            <div class="metric-val">12.4 km/h</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Track Grip & Micro-Climate Status</h3>
+                    <p style="font-size:0.9rem; line-height:1.6; color:var(--f1-subtext);">
+                        Rubber evolution on racing line is optimal. Thermal degradation in Sector 2 Turn 4 is accelerating due to elevated asphalt surface temperature (+3.2°C from FP3).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: PIT STOP PERFORMANCE & STRATEGY CALCULATOR -->
+        <section id="strategy" class="tab-content">
+            <div class="grid-dashboard">
+                <div class="card">
+                    <h3>Fastest Pit Stop Leaderboard</h3>
                     <table>
-                        <thead>
-                            <tr><th>Driver</th><th>Stint 1</th><th>Stint 2</th><th>Stint 3</th></tr>
-                        </thead>
-                        <tbody id="stint-body">
-                            <tr>
-                                <td><strong>VER (#1)</strong></td>
-                                <td><span class="compound-pill medium">M</span> L1 - L18</td>
-                                <td><span class="compound-pill hard">H</span> L19 - L40</td>
-                                <td><span class="compound-pill soft">S</span> L41 - Current</td>
-                            </tr>
-                            <tr>
-                                <td><strong>NOR (#4)</strong></td>
-                                <td><span class="compound-pill medium">M</span> L1 - L22</td>
-                                <td><span class="compound-pill hard">H</span> L23 - Current</td>
-                                <td>-</td>
-                            </tr>
+                        <thead><tr><th>Team</th><th>Driver</th><th>Stop Time</th></tr></thead>
+                        <tbody>
+                            <tr><td>Red Bull Racing</td><td>VER</td><td><strong>1.98s</strong></td></tr>
+                            <tr><td>Ferrari</td><td>LEC</td><td><strong>2.12s</strong></td></tr>
+                            <tr><td>McLaren</td><td>NOR</td><td><strong>2.24s</strong></td></tr>
                         </tbody>
                     </table>
                 </div>
 
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Undercut Probability Calculator</h3>
+                    <div style="display:flex; gap:15px; margin-top:10px;">
+                        <input type="number" id="gapInput" placeholder="Gap to car ahead (sec)" value="1.8" step="0.1" style="background:var(--f1-light-card); color:#fff; border:1px solid var(--soft-border); padding:8px; border-radius:4px;">
+                        <button onclick="calculateUndercut()" style="background:var(--f1-red); color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; font-weight:bold;">Simulate Pit Window</button>
+                    </div>
+                    <div id="undercut-result" style="margin-top:15px; font-weight:bold; color:var(--f1-gold);">
+                        Result: High probability of undercut success on fresh Medium compound (+1.4s gain/lap).
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- TAB 3: CHAMPIONSHIP STANDINGS -->
+        <!-- TAB 5: STANDINGS -->
         <section id="standings" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
                     <h3>Driver Standings</h3>
                     <table>
                         <thead><tr><th>Pos</th><th>Driver</th><th>Team</th><th>Pts</th></tr></thead>
-                        <tbody id="driver-standings-body">
-                            <!-- Populated dynamically via Jolpica/Ergast API -->
-                        </tbody>
+                        <tbody id="driver-standings-body"></tbody>
                     </table>
                 </div>
                 <div class="card">
                     <h3>Constructor Standings</h3>
                     <table>
                         <thead><tr><th>Pos</th><th>Team</th><th>Pts</th></tr></thead>
-                        <tbody id="constructor-standings-body">
-                            <!-- Populated dynamically via Jolpica/Ergast API -->
-                        </tbody>
+                        <tbody id="constructor-standings-body"></tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 4: HIGHLIGHTS & TECHNICAL ANALYSIS -->
-        <section id="highlights" class="tab-content">
-            <div class="grid-dashboard">
-                <div class="card" style="grid-column: span 2;">
-                    <h3>Video Highlights & Technical Debrief</h3>
-                    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background: #000; margin-bottom: 1rem;">
-                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" 
-                                src="https://www.youtube-nocookie.com/embed/videoseries?list=PLfoNZDHitwjU_O25114gZ7_S1kH-_yP0O" 
-                                title="F1 Highlights" allowfullscreen></iframe>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3>Technical Aerodynamic Analysis</h3>
-                    <ul style="list-style:none; line-height: 1.6; font-size: 0.9rem;">
-                        <li style="margin-bottom:12px; border-bottom: 1px solid var(--soft-border); padding-bottom: 8px;">
-                            <strong>Rear-Wing Beam Modifications:</strong> Reduced drag profiles optimized for long DRS straights.
-                        </li>
-                        <li style="margin-bottom:12px; border-bottom: 1px solid var(--soft-border); padding-bottom: 8px;">
-                            <strong>Floor Edge Wings:</strong> Floor seal vortex generation updated to prevent high-speed porpoising.
-                        </li>
-                        <li>
-                            <strong>Brake Duct Cooling:</strong> Enlarged scoops fitted to deal with ambient brake heat degradation.
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 5: F1 FANTASY GAMING -->
+        <!-- TAB 6: FANTASY -->
         <section id="fantasy" class="tab-content">
             <div class="card">
                 <h3>Formula Recap Fantasy League</h3>
-                <p style="margin-bottom:1rem; color: var(--f1-subtext); font-size: 0.9rem;">Manage your team budget, substitute drivers before Qualifying, and score points based on overtakes & pit strategy efficiency.</p>
-                <div style="display:flex; gap: 20px; flex-wrap: wrap;">
-                    <div style="background:var(--f1-light-card); padding:15px; border-radius:8px; flex:1;">
-                        <h4 style="margin-bottom: 8px;">Your Active Roster</h4>
-                        <p style="font-size:0.9rem;">Antonelli, Russell, Hamilton, Norris, Leclerc | <strong>Mercedes AMG F1</strong></p>
-                    </div>
-                    <div style="background:var(--f1-light-card); padding:15px; border-radius:8px; width:220px;">
-                        <h4 style="margin-bottom: 8px;">Remaining Budget</h4>
-                        <p style="font-size:1.6rem; font-weight:bold; color:var(--f1-gold);">$2.8M</p>
-                    </div>
+                <p style="color:var(--f1-subtext); margin-bottom:10px;">Build your team budget and earn points on overtakes, pit stop execution, and qualifying pace.</p>
+                <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; max-width:400px;">
+                    <strong>Active Team:</strong> Antonelli, Russell, Hamilton, Norris | Mercedes AMG F1
                 </div>
             </div>
         </section>
 
-        <!-- TAB 6: AT-TRACK FAN GUIDE -->
+        <!-- TAB 7: FAN GUIDE -->
         <section id="fanguide" class="tab-content">
-            <div class="grid-dashboard">
-                <div class="card" style="grid-column: span 2;">
-                    <h3>At-Track Interactive Fan Guide & Amenities Map</h3>
-                    <p style="font-size:0.9rem; color:var(--f1-subtext); margin-bottom: 1rem;">Find entrance gates, grandstands, fan zone stages, food courts, and hydration stations.</p>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
-                        <div style="background: var(--f1-light-card); padding: 12px; border-radius: 6px;">
-                            <h4 style="color: var(--f1-gold);">📍 Gate 3 Access</h4>
-                            <p style="font-size: 0.85rem; margin-top: 4px;">Fastest entry point for General Admission Turn 1 & Turn 2 banking.</p>
-                        </div>
-                        <div style="background: var(--f1-light-card); padding: 12px; border-radius: 6px;">
-                            <h4 style="color: var(--f1-gold);">🎤 Fan Zone Stage</h4>
-                            <p style="font-size: 0.85rem; margin-top: 4px;">Driver Q&A appearances start 2 hours prior to FP3 & Qualifying.</p>
-                        </div>
-                        <div style="background: var(--f1-light-card); padding: 12px; border-radius: 6px;">
-                            <h4 style="color: var(--f1-gold);">💧 Hydration Points</h4>
-                            <p style="font-size: 0.85rem; margin-top: 4px;">Free refill stations located behind Main Grandstand & Turn 4 terrace.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="card">
+                <h3>At-Track Circuit Guide & Gates</h3>
+                <ul style="padding-left:20px; line-height:1.8;">
+                    <li><strong>Gate 3:</strong> Fastest route to General Admission hill.</li>
+                    <li><strong>Fan Stage:</strong> Driver Q&A at 11:30 AM local time.</li>
+                    <li><strong>Free Hydration:</strong> Turn 1 and Turn 4 plaza stations.</li>
+                </ul>
             </div>
         </section>
 
     </main>
 
     <script>
-        // Tab Navigation Engine
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -493,189 +378,104 @@
             event.currentTarget.classList.add('active');
 
             if (tabId === 'telemetry') {
-                renderGPSTracker();
+                renderGPS();
+                renderTelemetryTrace();
             }
         }
 
-        // Fetch Live/Accurate Championship Standings from Open Jolpica F1 API
-        async function fetchRealStandings() {
-            try {
-                const driverRes = await fetch('https://api.jolpi.ca/ergast/f1/current/driverstandings.json');
-                const driverData = await driverRes.json();
-                const drivers = driverData.MRData.StandingsTable.StandingsLists[0].DriverStandings;
-
-                const driverBody = document.getElementById('driver-standings-body');
-                driverBody.innerHTML = '';
-                drivers.slice(0, 10).forEach(d => {
-                    driverBody.innerHTML += `
-                        <tr>
-                            <td>${d.position}</td>
-                            <td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td>
-                            <td>${d.Constructors[0].name}</td>
-                            <td><strong>${d.points}</strong></td>
-                        </tr>
-                    `;
-                });
-
-                const constRes = await fetch('https://api.jolpi.ca/ergast/f1/current/constructorstandings.json');
-                const constData = await constRes.json();
-                const constructors = constData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
-
-                const constBody = document.getElementById('constructor-standings-body');
-                constBody.innerHTML = '';
-                constructors.forEach(c => {
-                    constBody.innerHTML += `
-                        <tr>
-                            <td>${c.position}</td>
-                            <td><strong>${c.Constructor.name}</strong></td>
-                            <td><strong>${c.points}</strong></td>
-                        </tr>
-                    `;
-                });
-            } catch (e) {
-                console.warn('Fallback to local standings data:', e);
-                loadFallbackStandings();
-            }
-        }
-
-        function loadFallbackStandings() {
-            const drivers = [
-                { pos: 1, name: "Kimi Antonelli", team: "Mercedes", pts: 267 },
-                { pos: 2, name: "George Russell", team: "Mercedes", pts: 201 },
-                { pos: 3, name: "Lewis Hamilton", team: "Ferrari", pts: 191 },
-                { pos: 4, name: "Lando Norris", team: "McLaren", pts: 171 },
-                { pos: 5, name: "Charles Leclerc", team: "Ferrari", pts: 155 }
-            ];
-
-            const driverBody = document.getElementById('driver-standings-body');
-            driverBody.innerHTML = drivers.map(d => `
-                <tr><td>${d.pos}</td><td><strong>${d.name}</strong></td><td>${d.team}</td><td><strong>${d.pts}</strong></td></tr>
-            `).join('');
-        }
-
-        // Localized Session Timetable Generator
-        function loadLocalizedSchedule() {
+        function loadSchedule() {
             const sessions = [
                 { name: "Practice 1", utc: "2026-09-18T11:30:00Z" },
                 { name: "Practice 2", utc: "2026-09-18T15:00:00Z" },
                 { name: "Qualifying", utc: "2026-09-19T14:00:00Z" },
                 { name: "Grand Prix", utc: "2026-09-20T13:00:00Z" }
             ];
-
             const tbody = document.getElementById('schedule-body');
-            tbody.innerHTML = '';
-
-            sessions.forEach(s => {
-                const localDate = new Date(s.utc);
-                const timeString = localDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' });
-                tbody.innerHTML += `<tr><td>${s.name}</td><td><strong>${timeString}</strong></td></tr>`;
-            });
+            tbody.innerHTML = sessions.map(s => {
+                const local = new Date(s.utc).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' });
+                return `<tr><td>${s.name}</td><td><strong>${local}</strong></td></tr>`;
+            }).join('');
         }
 
-        // Populate Leaderboard Data
-        function loadLeaderboard() {
-            const drivers = [
-                { pos: 1, name: "K. Antonelli", team: "Mercedes", gap: "LEADER", tyre: "M", lap: "1:18.421" },
-                { pos: 2, name: "G. Russell", team: "Mercedes", gap: "+2.104s", tyre: "M", lap: "1:18.590" },
-                { pos: 3, name: "L. Hamilton", team: "Ferrari", gap: "+5.412s", tyre: "H", lap: "1:18.910" },
-                { pos: 4, name: "L. Norris", team: "McLaren", gap: "+7.892s", tyre: "H", lap: "1:18.720" },
-                { pos: 5, name: "C. Leclerc", team: "Ferrari", gap: "+12.330s", tyre: "S", lap: "1:18.399" }
-            ];
-
-            const body = document.getElementById('leaderboard-body');
-            body.innerHTML = drivers.map(d => `
-                <tr>
-                    <td>${d.pos}</td>
-                    <td><strong>${d.name}</strong></td>
-                    <td>${d.team}</td>
-                    <td>${d.gap}</td>
-                    <td><span class="compound-pill ${d.tyre === 'M' ? 'medium' : d.tyre === 'H' ? 'hard' : 'soft'}">${d.tyre}</span></td>
-                    <td>${d.lap}</td>
-                </tr>
-            `).join('');
-        }
-
-        // Fetch Real Audio Messages from OpenF1 API
-        async function fetchTeamRadio() {
+        async function fetchStandings() {
             try {
-                const res = await fetch('https://api.openf1.org/v1/team_radio?session_key=latest');
+                const res = await fetch('https://api.jolpi.ca/ergast/f1/current/driverstandings.json');
                 const data = await res.json();
-                if (data && data.length > 0) {
-                    const container = document.getElementById('radio-container');
-                    container.innerHTML = '';
-                    data.slice(-3).forEach(radio => {
-                        container.innerHTML += `
-                            <div class="radio-item">
-                                <strong style="color:var(--f1-gold);">📻 Driver #${radio.driver_number} Audio:</strong>
-                                <audio controls src="${radio.recording_url}"></audio>
-                            </div>
-                        `;
-                    });
-                }
+                const drivers = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+                
+                document.getElementById('driver-standings-body').innerHTML = drivers.slice(0, 5).map(d => `
+                    <tr><td>${d.position}</td><td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td><td>${d.Constructors[0].name}</td><td>${d.points}</td></tr>
+                `).join('');
             } catch (e) {
-                console.log("Using cached radio feed.");
+                document.getElementById('driver-standings-body').innerHTML = `
+                    <tr><td>1</td><td><strong>K. Antonelli</strong></td><td>Mercedes</td><td>267</td></tr>
+                    <tr><td>2</td><td><strong>G. Russell</strong></td><td>Mercedes</td><td>201</td></tr>
+                `;
             }
         }
 
-        // 2D Canvas Track & GPS Driver Simulator
-        function renderGPSTracker() {
-            const canvas = document.getElementById('gpsTrackCanvas');
+        function calculateUndercut() {
+            const gap = parseFloat(document.getElementById('gapInput').value);
+            const res = document.getElementById('undercut-result');
+            if (gap <= 2.2) {
+                res.innerHTML = `Result: High Undercut Success! Outlap gain estimated at ~1.5s vs cold hard compound.`;
+                res.style.color = 'var(--accent-green)';
+            } else {
+                res.innerHTML = `Result: Undercut Unlikely. Gap of ${gap}s exceeds single-lap tire warming delta.`;
+                res.style.color = 'var(--f1-red)';
+            }
+        }
+
+        function renderGPS() {
+            const canvas = document.getElementById('gpsCanvas');
             const ctx = canvas.getContext('2d');
             canvas.width = canvas.parentElement.clientWidth - 40;
-            canvas.height = 340;
-
             let t = 0;
+
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Outer Circuit Contour
                 ctx.beginPath();
-                ctx.strokeStyle = "#2f2f3e";
-                ctx.lineWidth = 16;
-                ctx.ellipse(canvas.width / 2, 170, canvas.width / 3.2, 110, 0, 0, 2 * Math.PI);
+                ctx.strokeStyle = "#333344";
+                ctx.lineWidth = 14;
+                ctx.ellipse(canvas.width / 2, 160, canvas.width / 3.2, 100, 0, 0, 2 * Math.PI);
                 ctx.stroke();
 
-                // Inner Racing Line
-                ctx.beginPath();
-                ctx.strokeStyle = "#555566";
-                ctx.lineWidth = 2;
-                ctx.setLineDash([6, 6]);
-                ctx.ellipse(canvas.width / 2, 170, canvas.width / 3.2, 110, 0, 0, 2 * Math.PI);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                // Driver Position 1
-                const x1 = canvas.width / 2 + Math.cos(t) * (canvas.width / 3.2);
-                const y1 = 170 + Math.sin(t) * 110;
+                const x = canvas.width / 2 + Math.cos(t) * (canvas.width / 3.2);
+                const y = 160 + Math.sin(t) * 100;
                 ctx.beginPath();
                 ctx.fillStyle = "#e10600";
-                ctx.arc(x1, y1, 9, 0, 2 * Math.PI);
+                ctx.arc(x, y, 8, 0, 2 * Math.PI);
                 ctx.fill();
-                ctx.fillStyle = "#fff";
-                ctx.font = "bold 10px sans-serif";
-                ctx.fillText("12", x1 - 5, y1 - 12);
 
-                // Driver Position 2
-                const x2 = canvas.width / 2 + Math.cos(t - 0.22) * (canvas.width / 3.2);
-                const y2 = 170 + Math.sin(t - 0.22) * 110;
-                ctx.beginPath();
-                ctx.fillStyle = "#ffb800";
-                ctx.arc(x2, y2, 9, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.fillStyle = "#fff";
-                ctx.fillText("63", x2 - 5, y2 - 12);
-
-                t += 0.015;
+                t += 0.02;
                 requestAnimationFrame(animate);
             }
             animate();
         }
 
+        function renderTelemetryTrace() {
+            const canvas = document.getElementById('telemetryTrace');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.beginPath();
+            ctx.strokeStyle = "#e10600";
+            ctx.lineWidth = 2.5;
+
+            for (let i = 0; i < w; i += 10) {
+                const y = h / 2 + Math.sin(i * 0.03) * (h / 3);
+                if (i === 0) ctx.moveTo(i, y);
+                else ctx.lineTo(i, y);
+            }
+            ctx.stroke();
+        }
+
         window.onload = function() {
-            loadLocalizedSchedule();
-            loadLeaderboard();
-            fetchRealStandings();
-            fetchTeamRadio();
+            loadSchedule();
+            fetchStandings();
         };
     </script>
 </body>
