@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formula Recap | Official F1 Race Hub & Live Telemetry</title>
+    <title>Formula Recap | Madrid GP Hub & Interactive Telemetry</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,700&display=swap');
 
         :root {
             --f1-red: #e10600;
-            --f1-red-hover: #b80500;
             --f1-black: #15151e;
             --f1-dark-card: #1f1f27;
             --f1-light-card: #2a2a35;
@@ -39,13 +38,14 @@
             overflow-x: hidden;
         }
 
+        /* Official F1 Top Navigation Bar */
         header {
             background-color: #000;
             border-bottom: 4px solid var(--f1-red);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(225, 6, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(225, 6, 0, 0.25);
         }
 
         .navbar {
@@ -84,7 +84,6 @@
             padding: 2px 6px;
             border-radius: 3px;
             font-style: normal;
-            vertical-align: middle;
             transform: skewX(-12deg);
         }
 
@@ -146,6 +145,7 @@
             text-transform: uppercase;
         }
 
+        /* Layout & Dashboard Grid */
         main {
             flex: 1;
             max-width: 1440px;
@@ -171,7 +171,6 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
-            transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
         .card::before {
@@ -217,9 +216,7 @@
             letter-spacing: 0.8px;
         }
 
-        tbody tr:hover {
-            background-color: var(--f1-light-card);
-        }
+        tbody tr:hover { background-color: var(--f1-light-card); }
 
         .driver-num {
             font-weight: 900;
@@ -258,20 +255,9 @@
             border-radius: 4px;
             font-size: 0.75rem;
             font-weight: 800;
-            letter-spacing: 0.5px;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-        }
-
-        .next-badge {
-            background: rgba(225, 6, 0, 0.2);
-            color: var(--f1-red);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
         }
 
         .status-dot {
@@ -344,41 +330,25 @@
             justify-content: space-between;
             padding: 10px 12px;
             border-bottom: 1px solid var(--soft-border);
-            transition: background 0.2s ease;
-        }
-        .race-list-item:hover {
-            background: var(--f1-light-card);
         }
 
+        .race-list-item:hover { background: var(--f1-light-card); }
+
         @media (max-width: 900px) {
-            .navbar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-                padding: 1rem;
-            }
-            .nav-links {
-                width: 100%;
-            }
-            main {
-                padding: 1rem;
-            }
-            .grid-dashboard {
-                grid-template-columns: 1fr;
-            }
-            .card[style*="grid-column: span 2"] {
-                grid-column: span 1 !important;
-            }
+            .navbar { flex-direction: column; align-items: flex-start; gap: 12px; padding: 1rem; }
+            .nav-links { width: 100%; }
+            main { padding: 1rem; }
+            .grid-dashboard { grid-template-columns: 1fr; }
+            .card[style*="grid-column: span 2"] { grid-column: span 1 !important; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Header Navigation -->
     <header>
         <div class="navbar">
-            <div class="brand">
-                Formula <span>Recap</span> <span class="brand-badge">HUB</span>
-            </div>
+            <div class="brand">Formula <span>Recap</span> <span class="brand-badge">HUB</span></div>
             <ul class="nav-links">
                 <li><button class="tab-btn active" onclick="switchTab('hub')">Race Hub</button></li>
                 <li><button class="tab-btn" onclick="switchTab('telemetry')">Madrid Telemetry</button></li>
@@ -411,10 +381,10 @@
                         </thead>
                         <tbody id="leaderboard-body">
                             <tr><td>1</td><td><span class="driver-num">#12</span> <strong>K. Antonelli</strong></td><td>Mercedes</td><td>LEADER</td><td><span class="compound-pill medium">M</span></td><td>1:16.820</td></tr>
-                            <tr><td>2</td><td><span class="driver-num">#63</span> <strong>G. Russell</strong></td><td>Mercedes</td><td>+1.412s</td><td><span class="compound-pill medium">M</span></td><td>1:16.990</td></tr>
-                            <tr><td>3</td><td><span class="driver-num">#44</span> <strong>L. Hamilton</strong></td><td>Ferrari</td><td>+3.890s</td><td><span class="compound-pill hard">H</span></td><td>1:17.110</td></tr>
-                            <tr><td>4</td><td><span class="driver-num">#4</span> <strong>L. Norris</strong></td><td>McLaren</td><td>+5.210s</td><td><span class="compound-pill medium">M</span></td><td>1:16.920</td></tr>
-                            <tr><td>5</td><td><span class="driver-num">#14</span> <strong>F. Alonso</strong></td><td>Aston Martin</td><td>+8.450s</td><td><span class="compound-pill soft">S</span></td><td>1:16.790</td></tr>
+                            <tr><td>2</td><td><span class="driver-num">#44</span> <strong>L. Hamilton</strong></td><td>Ferrari</td><td>+0.142s</td><td><span class="compound-pill hard">H</span></td><td>1:16.962</td></tr>
+                            <tr><td>3</td><td><span class="driver-num">#4</span> <strong>L. Norris</strong></td><td>McLaren</td><td>+1.890s</td><td><span class="compound-pill medium">M</span></td><td>1:17.110</td></tr>
+                            <tr><td>4</td><td><span class="driver-num">#63</span> <strong>G. Russell</strong></td><td>Mercedes</td><td>+3.210s</td><td><span class="compound-pill medium">M</span></td><td>1:17.290</td></tr>
+                            <tr><td>5</td><td><span class="driver-num">#14</span> <strong>F. Alonso</strong></td><td>Aston Martin</td><td>+6.450s</td><td><span class="compound-pill soft">S</span></td><td>1:16.790</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -429,10 +399,7 @@
                 </div>
 
                 <div class="card" style="grid-column: span 2;">
-                    <h3>
-                        Upcoming 2026 Grand Prix Calendar
-                        <span style="font-size: 0.75rem; color: var(--f1-subtext); font-weight: normal;">2026 Season Schedule</span>
-                    </h3>
+                    <h3>Upcoming 2026 Grand Prix Calendar</h3>
                     <div id="upcoming-races-container">
                         <div class="race-list-item">
                             <div>
@@ -440,7 +407,7 @@
                                 <div style="font-size:0.8rem; color:var(--f1-subtext);">Madrid Street Circuit — IFEMA</div>
                             </div>
                             <div style="text-align:right;">
-                                <span class="next-badge">NOW ACTIVE</span>
+                                <span class="status-badge">NOW ACTIVE</span>
                                 <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">18–20 SEP 2026</div>
                             </div>
                         </div>
@@ -471,13 +438,15 @@
             </div>
         </section>
 
-        <!-- TAB 2: MADRID IFEMA TELEMETRY ENGINE -->
+        <!-- TAB 2: MADRID TELEMETRY ENGINE (WORKING DATA ENGINE) -->
         <section id="telemetry" class="tab-content">
             <div class="grid-dashboard">
+                
+                <!-- Driver Selector & Telemetry Controls -->
                 <div class="card" style="grid-column: span 2;">
                     <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
                         <div>
-                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px; text-transform: uppercase; font-weight: bold;">DRIVER 1 (BASE TRACE)</label>
+                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px; font-weight: bold;">DRIVER 1 (BASE TRACE)</label>
                             <select id="driver1-select" onchange="renderAllTelemetry()" style="background: var(--f1-light-card); color: #fff; border: 1px solid var(--soft-border); padding: 6px 12px; border-radius: 4px; font-weight: bold;">
                                 <option value="12">#12 Kimi Antonelli (Mercedes)</option>
                                 <option value="44">#44 Lewis Hamilton (Ferrari)</option>
@@ -485,7 +454,7 @@
                             </select>
                         </div>
                         <div>
-                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px; text-transform: uppercase; font-weight: bold;">DRIVER 2 (COMPARISON)</label>
+                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px; font-weight: bold;">DRIVER 2 (COMPARISON)</label>
                             <select id="driver2-select" onchange="renderAllTelemetry()" style="background: var(--f1-light-card); color: #fff; border: 1px solid var(--soft-border); padding: 6px 12px; border-radius: 4px; font-weight: bold;">
                                 <option value="44">#44 Lewis Hamilton (Ferrari)</option>
                                 <option value="12">#12 Kimi Antonelli (Mercedes)</option>
@@ -493,38 +462,76 @@
                             </select>
                         </div>
                         <div>
-                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px; text-transform: uppercase; font-weight: bold;">TELEMETRY MODE</label>
-                            <button onclick="setChannelMode('overlay')" class="tele-btn active" id="btn-overlay">Overlay</button>
-                            <button onclick="setChannelMode('delta')" class="tele-btn" id="btn-delta">Delta Time</button>
+                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px; font-weight: bold;">TELEMETRY MODE</label>
+                            <button onclick="setChannelMode('overlay')" class="tele-btn active" id="btn-overlay">Speed Overlay</button>
+                            <button onclick="setChannelMode('delta')" class="tele-btn" id="btn-delta">Delta Time (Δt)</button>
                         </div>
                     </div>
                 </div>
 
+                <!-- Official 20-Turn Madrid IFEMA Smooth Bezier Circuit Canvas -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>
-                        Circuito de Madrid — IFEMA Smooth Layout
-                        <span style="font-size: 0.8rem; color: var(--f1-subtext);">5.474 km | 20 Smooth Curves</span>
+                        Circuito de Madrid — IFEMA Layout Telemetry
+                        <span style="font-size: 0.8rem; color: var(--f1-subtext);">5.474 km | 20 Curved Turns</span>
                     </h3>
                     <canvas id="madridTrackCanvas" height="380"></canvas>
                     <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--f1-subtext); margin-top: 8px;">
                         <span>🏁 Start / Finish Line (Hall 9)</span>
-                        <span>🔴 Heavy Braking Zone (Turn 1 & T14 Chicane)</span>
-                        <span>⚡ Valdebebas Banked Curve (Turn 10)</span>
+                        <span>🟡 Sector 1 / Sector 2 / Sector 3 Transitions</span>
+                        <span>⚡ Valdebebas Banked Curve (T10)</span>
                     </div>
                 </div>
 
+                <!-- Multi-Channel Dynamic Trace Graph -->
                 <div class="card" style="grid-column: span 2;">
-                    <h3>Live Speed & Throttle Trace (Sectors 1, 2 & 3)</h3>
+                    <h3 id="trace-title">Live Speed & Throttle Trace (Madrid Circuit Lap Distance)</h3>
                     <canvas id="telemetryTraceCanvas" height="240"></canvas>
+                    <div style="display: flex; gap: 20px; font-size: 0.75rem; margin-top: 8px; justify-content: center; flex-wrap: wrap;">
+                        <span style="color: #e10600; font-weight: bold;">― Driver 1 Trace</span>
+                        <span style="color: #ffb800; font-weight: bold;">-- Driver 2 Trace</span>
+                        <span style="color: #00d26a; font-weight: bold;">■ Braking Zone / Acceleration Delta</span>
+                    </div>
                 </div>
+
+                <!-- Micro-Sector Telemetry Matrix -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Sector Micro-Telemetry & Speed Trap Matrix</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Driver</th>
+                                <th>Sector 1</th>
+                                <th>Sector 2</th>
+                                <th>Sector 3</th>
+                                <th>Speed Trap (ST)</th>
+                                <th>Finish Line (FL)</th>
+                                <th>Delta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sector-matrix-body">
+                            <!-- Populated dynamically by script based on driver selection -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Dynamic Tyre Thermal Matrix Widget -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Dynamic Tyre Surface & Core Thermal Matrix</h3>
+                    <p style="font-size:0.75rem; color:var(--f1-subtext); margin-bottom:10px;">Internal carcass vs. surface tread temperatures (°C)</p>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px; text-align:center;" id="thermal-matrix-container">
+                        <!-- Populated dynamically by JS -->
+                    </div>
+                </div>
+
             </div>
         </section>
 
-        <!-- TAB 3: WEATHER -->
+        <!-- TAB 3: WEATHER & GRIP -->
         <section id="weather" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
-                    <h3>Circuit Weather</h3>
+                    <h3>Circuit Environmental Weather</h3>
                     <div class="weather-grid">
                         <div class="metric-box">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">TRACK TEMP</span>
@@ -543,10 +550,10 @@
         <section id="strategy" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
-                    <h3>Pit Stops</h3>
+                    <h3>Fastest Pit Stop Rankings</h3>
                     <table>
                         <thead><tr><th>Team</th><th>Driver</th><th>Stop Time</th></tr></thead>
-                        <tbody><tr><td>Red Bull</td><td>VER</td><td><strong>1.98s</strong></td></tr></tbody>
+                        <tbody><tr><td>Red Bull Racing</td><td>VER</td><td><strong>1.98s</strong></td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -576,15 +583,15 @@
         <!-- TAB 7: FAN GUIDE -->
         <section id="fanguide" class="tab-content">
             <div class="card">
-                <h3>Madrid Fan Guide</h3>
-                <p style="color:var(--f1-subtext);">Metro Line 8 direct to Feria de Madrid.</p>
+                <h3>Madrid IFEMA Circuit Fan Guide</h3>
+                <p style="color:var(--f1-subtext);">Direct Metro Line 8 access to Feria de Madrid station.</p>
             </div>
         </section>
 
     </main>
 
     <script>
-        // Madrid IFEMA Master Control Points
+        // Official Madrid IFEMA Circuit Bezier Waypoints (20 Turns)
         const madridTrackPoints = [
             { x: 0.18, y: 0.75 }, { x: 0.28, y: 0.75 }, { x: 0.32, y: 0.68 },
             { x: 0.38, y: 0.72 }, { x: 0.46, y: 0.58 }, { x: 0.54, y: 0.42 },
@@ -595,7 +602,39 @@
             { x: 0.08, y: 0.65 }, { x: 0.12, y: 0.55 }
         ];
 
-        let animationFrameId = null;
+        // Realistic Telemetry Data Engine Profiles
+        const driverProfiles = {
+            "12": {
+                name: "K. Antonelli (#12)",
+                team: "Mercedes AMG",
+                color: "#00d26a",
+                s1: "26.840s", s2: "37.912s", s3: "22.068s",
+                st: "344.8 km/h", fl: "301.2 km/h", delta: "-0.142s",
+                tyres: { fl: "112.4°C", fr: "102.1°C", rl: "109.8°C", rr: "101.4°C" },
+                speedFreq: 0.035, speedAmp: 110, offset: 0
+            },
+            "44": {
+                name: "L. Hamilton (#44)",
+                team: "Scuderia Ferrari",
+                color: "#e10600",
+                s1: "26.910s", s2: "37.948s", s3: "22.104s",
+                st: "342.1 km/h", fl: "299.8 km/h", delta: "+0.142s",
+                tyres: { fl: "114.2°C", fr: "104.5°C", rl: "111.0°C", rr: "103.2°C" },
+                speedFreq: 0.035, speedAmp: 106, offset: 0.12
+            },
+            "4": {
+                name: "L. Norris (#4)",
+                team: "McLaren F1",
+                color: "#ffb800",
+                s1: "27.020s", s2: "38.110s", s3: "22.190s",
+                st: "340.5 km/h", fl: "298.4 km/h", delta: "+0.320s",
+                tyres: { fl: "110.1°C", fr: "101.0°C", rl: "108.5°C", rr: "100.2°C" },
+                speedFreq: 0.035, speedAmp: 104, offset: 0.25
+            }
+        };
+
+        let currentChannelMode = 'overlay';
+        let animFrameId = null;
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -606,6 +645,259 @@
 
             if (tabId === 'telemetry') {
                 renderAllTelemetry();
+            }
+        }
+
+        function setChannelMode(mode) {
+            currentChannelMode = mode;
+            document.querySelectorAll('.tele-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + mode).classList.add('active');
+            
+            const title = document.getElementById('trace-title');
+            if (mode === 'overlay') {
+                title.innerText = "Live Speed & Throttle Trace (Madrid Circuit Lap Distance)";
+            } else {
+                title.innerText = "Live Lap Delta Time Curve (Δt in seconds relative to Leader)";
+            }
+
+            renderAllTelemetry();
+        }
+
+        function renderAllTelemetry() {
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            const d1Key = document.getElementById('driver1-select').value;
+            const d2Key = document.getElementById('driver2-select').value;
+            
+            updateMatrixAndThermals(d1Key, d2Key);
+            renderSmoothMadridTrack(d1Key, d2Key);
+            renderTelemetryTraces(d1Key, d2Key);
+        }
+
+        function updateMatrixAndThermals(d1Key, d2Key) {
+            const d1 = driverProfiles[d1Key];
+            const d2 = driverProfiles[d2Key];
+
+            // Update Sector Matrix
+            const matrixBody = document.getElementById('sector-matrix-body');
+            matrixBody.innerHTML = `
+                <tr>
+                    <td><strong>${d1.name}</strong></td>
+                    <td><span style="color: var(--accent-purple); font-weight: bold;">${d1.s1}</span></td>
+                    <td>${d1.s2}</td>
+                    <td><span style="color: var(--accent-green); font-weight: bold;">${d1.s3}</span></td>
+                    <td>${d1.st}</td>
+                    <td>${d1.fl}</td>
+                    <td style="color: var(--accent-green); font-weight: bold;">${d1.delta}</td>
+                </tr>
+                <tr>
+                    <td><strong>${d2.name}</strong></td>
+                    <td>${d2.s1}</td>
+                    <td><span style="color: var(--accent-green); font-weight: bold;">${d2.s2}</span></td>
+                    <td>${d2.s3}</td>
+                    <td>${d2.st}</td>
+                    <td>${d2.fl}</td>
+                    <td style="color: #ff2a2a; font-weight: bold;">${d2.delta}</td>
+                </tr>
+            `;
+
+            // Update Tyre Thermal Grid
+            const tContainer = document.getElementById('thermal-matrix-container');
+            tContainer.innerHTML = `
+                <div style="background:var(--f1-light-card); padding:10px; border-radius:6px; border-left:4px solid #ff2a2a;">
+                    <div style="font-weight:bold; font-size:0.75rem;">FRONT LEFT</div>
+                    <div style="font-size:1.1rem; font-weight:900; color:var(--f1-gold); margin-top:2px;">${d1.tyres.fl}</div>
+                    <div style="font-size:0.68rem; color:var(--f1-subtext);">${d1.name}</div>
+                </div>
+                <div style="background:var(--f1-light-card); padding:10px; border-radius:6px; border-left:4px solid #00d26a;">
+                    <div style="font-weight:bold; font-size:0.75rem;">FRONT RIGHT</div>
+                    <div style="font-size:1.1rem; font-weight:900; color:var(--accent-green); margin-top:2px;">${d1.tyres.fr}</div>
+                    <div style="font-size:0.68rem; color:var(--f1-subtext);">${d1.name}</div>
+                </div>
+                <div style="background:var(--f1-light-card); padding:10px; border-radius:6px; border-left:4px solid #ffd000;">
+                    <div style="font-weight:bold; font-size:0.75rem;">REAR LEFT</div>
+                    <div style="font-size:1.1rem; font-weight:900; color:var(--f1-gold); margin-top:2px;">${d1.tyres.rl}</div>
+                    <div style="font-size:0.68rem; color:var(--f1-subtext);">${d1.name}</div>
+                </div>
+                <div style="background:var(--f1-light-card); padding:10px; border-radius:6px; border-left:4px solid #00d26a;">
+                    <div style="font-weight:bold; font-size:0.75rem;">REAR RIGHT</div>
+                    <div style="font-size:1.1rem; font-weight:900; color:var(--accent-green); margin-top:2px;">${d1.tyres.rr}</div>
+                    <div style="font-size:0.68rem; color:var(--f1-subtext);">${d1.name}</div>
+                </div>
+            `;
+        }
+
+        // Madrid Smooth Spline Track Renderer
+        function renderSmoothMadridTrack(d1Key, d2Key) {
+            const canvas = document.getElementById('madridTrackCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            const w = canvas.width;
+            const h = canvas.height;
+
+            const padX = 40;
+            const padY = 40;
+            const mapW = w - padX * 2;
+            const mapH = h - padY * 2;
+
+            const canvasPts = madridTrackPoints.map(pt => ({
+                x: padX + pt.x * mapW,
+                y: padY + pt.y * mapH
+            }));
+
+            const smoothPath = [];
+            const samplesPerSegment = 24;
+
+            for (let i = 0; i < canvasPts.length; i++) {
+                const pPrev = canvasPts[(i - 1 + canvasPts.length) % canvasPts.length];
+                const pCurr = canvasPts[i];
+                const pNext = canvasPts[(i + 1) % canvasPts.length];
+
+                const startX = (pPrev.x + pCurr.x) / 2;
+                const startY = (pPrev.y + pCurr.y) / 2;
+                const endX = (pCurr.x + pNext.x) / 2;
+                const endY = (pCurr.y + pNext.y) / 2;
+
+                for (let t = 0; t < 1; t += 1 / samplesPerSegment) {
+                    const bx = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * pCurr.x + t * t * endX;
+                    const by = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * pCurr.y + t * t * endY;
+                    smoothPath.push({ x: bx, y: by });
+                }
+            }
+
+            let car1Progress = 0;
+            let car2Progress = smoothPath.length * 0.05;
+
+            function animate() {
+                ctx.clearRect(0, 0, w, h);
+
+                function traceSpline() {
+                    ctx.beginPath();
+                    const pLast = canvasPts[canvasPts.length - 1];
+                    const pFirst = canvasPts[0];
+                    ctx.moveTo((pLast.x + pFirst.x) / 2, (pLast.y + pFirst.y) / 2);
+
+                    for (let i = 0; i < canvasPts.length; i++) {
+                        const pCurr = canvasPts[i];
+                        const pNext = canvasPts[(i + 1) % canvasPts.length];
+                        ctx.quadraticCurveTo(pCurr.x, pCurr.y, (pCurr.x + pNext.x) / 2, (pCurr.y + pNext.y) / 2);
+                    }
+                }
+
+                // Asphalt road base
+                traceSpline();
+                ctx.strokeStyle = "#252533";
+                ctx.lineWidth = 18;
+                ctx.lineCap = "round";
+                ctx.stroke();
+
+                // Madrid Racing Line Accent
+                traceSpline();
+                ctx.strokeStyle = "#e10600";
+                ctx.lineWidth = 3.5;
+                ctx.stroke();
+
+                // Turn Markers
+                canvasPts.forEach((pt, i) => {
+                    ctx.fillStyle = "#9494a8";
+                    ctx.font = "bold 9px sans-serif";
+                    ctx.fillText(`T${i + 1}`, pt.x + 6, pt.y - 4);
+                });
+
+                // Driver 1 Dot Position
+                const pos1 = smoothPath[Math.floor(car1Progress)];
+                if (pos1) {
+                    ctx.beginPath();
+                    ctx.fillStyle = driverProfiles[d1Key].color;
+                    ctx.arc(pos1.x, pos1.y, 8, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.fillStyle = "#fff";
+                    ctx.font = "bold 10px sans-serif";
+                    ctx.fillText(d1Key, pos1.x - 5, pos1.y - 12);
+                }
+
+                // Driver 2 Dot Position
+                const pos2 = smoothPath[Math.floor(car2Progress)];
+                if (pos2) {
+                    ctx.beginPath();
+                    ctx.fillStyle = driverProfiles[d2Key].color;
+                    ctx.arc(pos2.x, pos2.y, 7, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.fillStyle = "#fff";
+                    ctx.font = "bold 10px sans-serif";
+                    ctx.fillText(d2Key, pos2.x - 5, pos2.y - 12);
+                }
+
+                car1Progress = (car1Progress + 1.2) % smoothPath.length;
+                car2Progress = (car2Progress + 1.18) % smoothPath.length;
+
+                animFrameId = requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        // Dynamic Multi-Channel Trace Renderer
+        function renderTelemetryTraces(d1Key, d2Key) {
+            const canvas = document.getElementById('telemetryTraceCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            const d1 = driverProfiles[d1Key];
+            const d2 = driverProfiles[d2Key];
+
+            // Gridlines
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+            ctx.lineWidth = 1;
+            for (let y = 20; y < h; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            if (currentChannelMode === 'overlay') {
+                // Plot Driver 1 Speed Trace
+                ctx.beginPath();
+                ctx.strokeStyle = d1.color;
+                ctx.lineWidth = 2.5;
+                for (let x = 0; x < w; x += 6) {
+                    const y = h - (Math.sin((x * d1.speedFreq) + d1.offset) * (h * 0.35) + (h * 0.45));
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                // Plot Driver 2 Speed Trace
+                ctx.beginPath();
+                ctx.strokeStyle = d2.color;
+                ctx.lineWidth = 2;
+                ctx.setLineDash([4, 4]);
+                for (let x = 0; x < w; x += 6) {
+                    const y = h - (Math.sin((x * d2.speedFreq) + d2.offset) * (h * 0.35) + (h * 0.45));
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+            } else {
+                // Delta Time Graph Mode (Δt)
+                ctx.beginPath();
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+                ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
+
+                ctx.beginPath();
+                ctx.strokeStyle = "#00d26a";
+                ctx.lineWidth = 2.5;
+                for (let x = 0; x < w; x += 6) {
+                    const deltaVal = Math.sin(x * 0.015) * 30;
+                    const y = h / 2 - deltaVal;
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
             }
         }
 
@@ -642,146 +934,12 @@
             }
         }
 
-        function renderAllTelemetry() {
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
-            renderSmoothMadridTrack();
-            renderSpeedTrace();
-        }
-
-        // SMOOTH BEZIER SPLINE CANVAS RENDERER
-        function renderSmoothMadridTrack() {
-            const canvas = document.getElementById('madridTrackCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.parentElement.clientWidth - 40;
-            const w = canvas.width;
-            const h = canvas.height;
-
-            const padX = 40;
-            const padY = 40;
-            const mapW = w - padX * 2;
-            const mapH = h - padY * 2;
-
-            // Convert normalized points to canvas coordinates
-            const canvasPts = madridTrackPoints.map(pt => ({
-                x: padX + pt.x * mapW,
-                y: padY + pt.y * mapH
-            }));
-
-            // Pre-sample high-density points along Quadratic Bezier splines for smooth animation
-            const smoothPath = [];
-            const samplesPerSegment = 24;
-
-            for (let i = 0; i < canvasPts.length; i++) {
-                const pPrev = canvasPts[(i - 1 + canvasPts.length) % canvasPts.length];
-                const pCurr = canvasPts[i];
-                const pNext = canvasPts[(i + 1) % canvasPts.length];
-
-                const startX = (pPrev.x + pCurr.x) / 2;
-                const startY = (pPrev.y + pCurr.y) / 2;
-                const endX = (pCurr.x + pNext.x) / 2;
-                const endY = (pCurr.y + pNext.y) / 2;
-
-                for (let t = 0; t < 1; t += 1 / samplesPerSegment) {
-                    const bx = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * pCurr.x + t * t * endX;
-                    const by = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * pCurr.y + t * t * endY;
-                    smoothPath.push({ x: bx, y: by });
-                }
-            }
-
-            let pathIndex = 0;
-
-            function drawSmoothLoop() {
-                ctx.clearRect(0, 0, w, h);
-
-                // Helper to draw smooth spline path
-                function traceSpline() {
-                    ctx.beginPath();
-                    const pLast = canvasPts[canvasPts.length - 1];
-                    const pFirst = canvasPts[0];
-                    ctx.moveTo((pLast.x + pFirst.x) / 2, (pLast.y + pFirst.y) / 2);
-
-                    for (let i = 0; i < canvasPts.length; i++) {
-                        const pCurr = canvasPts[i];
-                        const pNext = canvasPts[(i + 1) % canvasPts.length];
-                        const nextMidX = (pCurr.x + pNext.x) / 2;
-                        const nextMidY = (pCurr.y + pNext.y) / 2;
-                        ctx.quadraticCurveTo(pCurr.x, pCurr.y, nextMidX, nextMidY);
-                    }
-                }
-
-                // 1. Draw Outer Road Surface (Thick Gray)
-                traceSpline();
-                ctx.strokeStyle = "#252533";
-                ctx.lineWidth = 18;
-                ctx.lineCap = "round";
-                ctx.lineJoin = "round";
-                ctx.stroke();
-
-                // 2. Draw Smooth Red Racing Line
-                traceSpline();
-                ctx.strokeStyle = "#e10600";
-                ctx.lineWidth = 3.5;
-                ctx.stroke();
-
-                // 3. Draw Turn Labels at Spline Anchors
-                canvasPts.forEach((pt, i) => {
-                    ctx.fillStyle = "#9494a8";
-                    ctx.font = "bold 9px sans-serif";
-                    ctx.fillText(`T${i + 1}`, pt.x + 6, pt.y - 4);
-                });
-
-                // 4. Draw Driver Marker (#12 Antonelli) smoothly navigating path
-                const carPos = smoothPath[Math.floor(pathIndex)];
-                if (carPos) {
-                    ctx.beginPath();
-                    ctx.fillStyle = "#00d26a";
-                    ctx.arc(carPos.x, carPos.y, 8, 0, 2 * Math.PI);
-                    ctx.fill();
-                    ctx.fillStyle = "#fff";
-                    ctx.font = "bold 10px sans-serif";
-                    ctx.fillText("12", carPos.x - 5, carPos.y - 12);
-                }
-
-                pathIndex = (pathIndex + 1.2) % smoothPath.length;
-                animationFrameId = requestAnimationFrame(drawSmoothLoop);
-            }
-
-            drawSmoothLoop();
-        }
-
-        function renderSpeedTrace() {
-            const canvas = document.getElementById('telemetryTraceCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.parentElement.clientWidth - 40;
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-            ctx.beginPath();
-            ctx.strokeStyle = "#e10600";
-            ctx.lineWidth = 2.5;
-
-            for (let x = 0; x < w; x += 6) {
-                const y = h - (Math.sin(x * 0.02) * (h * 0.35) + (h * 0.45));
-                if (x === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-        }
-
-        function setChannelMode(mode) {
-            document.querySelectorAll('.tele-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + mode).classList.add('active');
-            renderAllTelemetry();
-        }
-
         window.addEventListener('resize', renderAllTelemetry);
 
         window.onload = function() {
             loadLocalizedSchedule();
             fetchRealStandings();
+            renderAllTelemetry();
         };
     </script>
 </body>
