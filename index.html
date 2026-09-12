@@ -89,7 +89,7 @@
             transform: skewX(-12deg);
         }
 
-        /* Nav Tab Bar with F1 Slanted Styling */
+        /* Nav Tab Bar */
         .nav-links {
             display: flex;
             gap: 6px;
@@ -131,7 +131,6 @@
             border-radius: 2px;
         }
 
-        /* Official Broadcast Disclaimer Banner */
         .f1tv-banner {
             background: linear-gradient(90deg, #0d0d12 0%, #1a1a24 50%, #0d0d12 100%);
             border-bottom: 1px solid var(--soft-border);
@@ -147,10 +146,6 @@
             text-decoration: none;
             font-weight: 800;
             text-transform: uppercase;
-        }
-
-        .f1tv-banner a:hover {
-            text-decoration: underline;
         }
 
         /* Main Container */
@@ -172,7 +167,6 @@
             gap: 1.25rem;
         }
 
-        /* Card Component with F1 Red Accent Line & Angled Edges */
         .card {
             background: var(--f1-dark-card);
             border: 1px solid var(--soft-border);
@@ -207,7 +201,7 @@
             align-items: center;
         }
 
-        /* Data Tables */
+        /* Tables */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -228,15 +222,10 @@
             letter-spacing: 0.8px;
         }
 
-        tbody tr {
-            transition: background 0.15s ease;
-        }
-
         tbody tr:hover {
             background-color: var(--f1-light-card);
         }
 
-        /* F1 Driver Number Badges */
         .driver-num {
             font-weight: 900;
             font-style: italic;
@@ -244,7 +233,6 @@
             margin-right: 4px;
         }
 
-        /* F1 Compound Indicators */
         .compound-pill {
             display: inline-block;
             width: 24px;
@@ -261,7 +249,6 @@
         .medium { background-color: #ffd000; color: #000; }
         .hard { background-color: #ffffff; color: #000; }
 
-        /* Canvas Elements */
         canvas {
             width: 100%;
             background-color: #0b0b10;
@@ -269,7 +256,6 @@
             border: 1px solid var(--soft-border);
         }
 
-        /* Status & Live Indicators */
         .status-badge {
             background: rgba(0, 210, 106, 0.15);
             color: var(--accent-green);
@@ -281,6 +267,16 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+        }
+
+        .next-badge {
+            background: rgba(225, 6, 0, 0.2);
+            color: var(--f1-red);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
         }
 
         .status-dot {
@@ -298,7 +294,6 @@
             100% { opacity: 1; }
         }
 
-        /* Telemetry Control Buttons */
         .tele-btn {
             background: var(--f1-light-card);
             color: var(--f1-subtext);
@@ -318,7 +313,6 @@
             border-color: var(--f1-red);
         }
 
-        /* Weather & Sensor Widgets */
         .weather-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -340,7 +334,6 @@
             margin-top: 4px;
         }
 
-        /* Radio Log Item */
         .radio-item {
             background: #111118;
             padding: 12px;
@@ -350,7 +343,19 @@
             border-left: 4px solid var(--f1-red);
         }
 
-        /* Mobile Adjustments */
+        /* Race List Layout */
+        .race-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--soft-border);
+            transition: background 0.2s ease;
+        }
+        .race-list-item:hover {
+            background: var(--f1-light-card);
+        }
+
         @media (max-width: 900px) {
             .navbar {
                 flex-direction: column;
@@ -375,7 +380,6 @@
 </head>
 <body>
 
-    <!-- Header & Navigation Bar -->
     <header>
         <div class="navbar">
             <div class="brand">
@@ -393,15 +397,13 @@
         </div>
     </header>
 
-    <!-- F1 TV Video Disclaimer Banner -->
     <div class="f1tv-banner">
         ℹ️ Telemetry, timing, GPS tracking & strategy models on Formula Recap are free. <strong>Live video broadcast streaming & onboard feeds</strong> require the official <a href="https://f1tv.formula1.com" target="_blank" rel="noopener">F1 TV App</a>.
     </div>
 
-    <!-- App Main Container -->
     <main>
 
-        <!-- TAB 1: RACE HUB (LEADERBOARD & LOCAL TIMETABLE) -->
+        <!-- TAB 1: RACE HUB (LEADERBOARD, LOCAL TIMETABLE, & UPCOMING RACES) -->
         <section id="hub" class="tab-content active">
             <div class="grid-dashboard">
                 
@@ -425,14 +427,78 @@
                     </table>
                 </div>
 
-                <!-- Localized Timetable -->
+                <!-- Localized Timetable Card -->
                 <div class="card">
-                    <h3>Localized Weekend Timetable</h3>
-                    <p style="font-size:0.8rem; color:var(--f1-subtext); margin-bottom:12px;">Automatically converted to your device's timezone.</p>
+                    <h3>Current Event Schedule</h3>
+                    <p style="font-size:0.8rem; color:var(--f1-subtext); margin-bottom:12px;">Auto-adjusted to your device clock.</p>
                     <table>
                         <thead><tr><th>Session</th><th>Local Time</th></tr></thead>
                         <tbody id="schedule-body"></tbody>
                     </table>
+                </div>
+
+                <!-- NEW: UPCOMING RACES CARD -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>
+                        Upcoming 2026 Grand Prix Calendar
+                        <span style="font-size: 0.75rem; color: var(--f1-subtext); font-weight: normal;">2026 Season Schedule</span>
+                    </h3>
+                    <div id="upcoming-races-container">
+                        <div class="race-list-item">
+                            <div>
+                                <strong style="font-size:0.95rem; color:#fff;">ROUND 16: Spanish Grand Prix</strong>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext);">Madrid Street Circuit — IFEMA</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <span class="next-badge">NOW ACTIVE</span>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">18–20 SEP 2026</div>
+                            </div>
+                        </div>
+
+                        <div class="race-list-item">
+                            <div>
+                                <strong style="font-size:0.95rem; color:#fff;">ROUND 17: Singapore Grand Prix</strong>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext);">Marina Bay Street Circuit</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <span style="font-size:0.75rem; color:var(--f1-gold); font-weight:bold;">UPCOMING</span>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">02–04 OCT 2026</div>
+                            </div>
+                        </div>
+
+                        <div class="race-list-item">
+                            <div>
+                                <strong style="font-size:0.95rem; color:#fff;">ROUND 18: United States Grand Prix</strong>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext);">Circuit of the Americas (Austin)</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <span style="font-size:0.75rem; color:var(--f1-subtext); font-weight:bold;">UPCOMING</span>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">16–18 OCT 2026</div>
+                            </div>
+                        </div>
+
+                        <div class="race-list-item">
+                            <div>
+                                <strong style="font-size:0.95rem; color:#fff;">ROUND 19: Mexico City Grand Prix</strong>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext);">Autódromo Hermanos Rodríguez</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <span style="font-size:0.75rem; color:var(--f1-subtext); font-weight:bold;">UPCOMING</span>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">23–25 OCT 2026</div>
+                            </div>
+                        </div>
+
+                        <div class="race-list-item">
+                            <div>
+                                <strong style="font-size:0.95rem; color:#fff;">ROUND 20: São Paulo Grand Prix</strong>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext);">Autódromo José Carlos Pace (Interlagos)</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <span style="font-size:0.75rem; color:var(--f1-subtext); font-weight:bold;">UPCOMING</span>
+                                <div style="font-size:0.8rem; color:var(--f1-subtext); margin-top:2px;">06–08 NOV 2026</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -441,8 +507,6 @@
         <!-- TAB 2: MADRID IFEMA TELEMETRY ENGINE -->
         <section id="telemetry" class="tab-content">
             <div class="grid-dashboard">
-                
-                <!-- Driver Selector & Telemetry Controls Bar -->
                 <div class="card" style="grid-column: span 2;">
                     <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
                         <div>
@@ -469,7 +533,6 @@
                     </div>
                 </div>
 
-                <!-- Official 20-Turn Madrid IFEMA Circuit Canvas Map -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>
                         Circuito de Madrid — IFEMA Street Layout
@@ -483,7 +546,6 @@
                     </div>
                 </div>
 
-                <!-- Multi-Channel Synchronized Telemetry Graph -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>Live Speed & Throttle Trace (Sectors 1, 2 & 3)</h3>
                     <canvas id="telemetryTraceCanvas" height="240"></canvas>
@@ -494,7 +556,6 @@
                     </div>
                 </div>
 
-                <!-- Unedited Team Radio Feed -->
                 <div class="card">
                     <h3>Unedited Team Radio Messages</h3>
                     <div id="radio-container">
@@ -509,7 +570,6 @@
                     </div>
                 </div>
 
-                <!-- Tyre Thermal Matrix Widget -->
                 <div class="card">
                     <h3>Tyre Surface & Core Thermal Matrix</h3>
                     <p style="font-size:0.75rem; color:var(--f1-subtext); margin-bottom:10px;">Internal carcass vs. surface tread temperatures (°C)</p>
@@ -536,11 +596,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
-        <!-- TAB 3: TRACK WEATHER & GRIP metrics -->
+        <!-- TAB 3: TRACK WEATHER & GRIP -->
         <section id="weather" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
@@ -574,7 +633,7 @@
             </div>
         </section>
 
-        <!-- TAB 4: PIT STOP & STRATEGY CALCULATOR -->
+        <!-- TAB 4: PIT STOP & STRATEGY -->
         <section id="strategy" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
@@ -655,7 +714,6 @@
     </main>
 
     <script>
-        // Madrid IFEMA Circuit Coordinates (20 Turns)
         const madridTrackPoints = [
             { x: 0.18, y: 0.75 }, { x: 0.28, y: 0.75 }, { x: 0.32, y: 0.68 },
             { x: 0.38, y: 0.72 }, { x: 0.46, y: 0.58 }, { x: 0.54, y: 0.42 },
@@ -666,7 +724,6 @@
             { x: 0.08, y: 0.65 }, { x: 0.12, y: 0.55 }, { x: 0.18, y: 0.75 }
         ];
 
-        // Navigation Tab Switcher
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -679,7 +736,6 @@
             }
         }
 
-        // Localized Session Timetable Generator
         function loadLocalizedSchedule() {
             const sessions = [
                 { name: "Practice 1", utc: "2026-09-18T11:30:00Z" },
@@ -696,7 +752,6 @@
             }).join('');
         }
 
-        // Fetch Real Standings API
         async function fetchRealStandings() {
             try {
                 const res = await fetch('https://api.jolpi.ca/ergast/f1/current/driverstandings.json');
@@ -727,7 +782,6 @@
             }
         }
 
-        // Strategy Calculator
         function calculateUndercut() {
             const gap = parseFloat(document.getElementById('gapInput').value);
             const res = document.getElementById('undercut-result');
@@ -740,13 +794,11 @@
             }
         }
 
-        // Master Telemetry Renderer
         function renderAllTelemetry() {
             renderMadridTrack();
             renderSpeedTrace();
         }
 
-        // 1. Madrid Track Canvas Renderer
         function renderMadridTrack() {
             const canvas = document.getElementById('madridTrackCanvas');
             if (!canvas) return;
@@ -764,7 +816,6 @@
             function animate() {
                 ctx.clearRect(0, 0, w, h);
 
-                // Track Base Contour Line
                 ctx.beginPath();
                 ctx.strokeStyle = "#252533";
                 ctx.lineWidth = 16;
@@ -778,7 +829,6 @@
                 });
                 ctx.stroke();
 
-                // Racing Line Accent
                 ctx.beginPath();
                 ctx.strokeStyle = "#e10600";
                 ctx.lineWidth = 3.5;
@@ -790,7 +840,6 @@
                 });
                 ctx.stroke();
 
-                // Turn Numbers
                 madridTrackPoints.slice(0, 20).forEach((pt, i) => {
                     const px = padX + pt.x * mapW;
                     const py = padY + pt.y * mapH;
@@ -799,7 +848,6 @@
                     ctx.fillText(`T${i + 1}`, px + 5, py - 4);
                 });
 
-                // Live Driver GPS Marker
                 const totalPts = madridTrackPoints.length - 1;
                 const currIndex = Math.floor(carProgress);
                 const nextIndex = (currIndex + 1) % madridTrackPoints.length;
@@ -825,7 +873,6 @@
             animate();
         }
 
-        // 2. Multi-Channel Speed Trace Graph
         function renderSpeedTrace() {
             const canvas = document.getElementById('telemetryTraceCanvas');
             if (!canvas) return;
