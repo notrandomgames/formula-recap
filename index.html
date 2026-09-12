@@ -400,7 +400,7 @@
 
     <header>
         <div class="navbar">
-            <div class="brand">Formula <span>Recap</span> <span class="brand-badge">VERCEL CORS SYNC</span></div>
+            <div class="brand">Formula <span>Recap</span> <span class="brand-badge">CORS READY</span></div>
             <ul class="nav-links">
                 <li><button class="tab-btn active" onclick="switchTab('hub')">Race Hub</button></li>
                 <li><button class="tab-btn" onclick="switchTab('telemetry')">Madrid Telemetry</button></li>
@@ -589,19 +589,19 @@
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">TRACK TEMP</span>
-                            <div style="font-size:1.4rem; font-weight:900; color:var(--f1-gold);" id="live-track-temp">38.4 °C</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:var(--f1-gold);">38.4 °C</div>
                         </div>
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">AIR TEMP</span>
-                            <div style="font-size:1.4rem; font-weight:900; color:#fff;" id="live-air-temp">24.1 °C</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:#fff;">24.1 °C</div>
                         </div>
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">HUMIDITY</span>
-                            <div style="font-size:1.4rem; font-weight:900; color:var(--sector-3-blue);" id="live-humidity">58%</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:var(--sector-3-blue);">58%</div>
                         </div>
                         <div style="background:var(--f1-light-card); padding:12px; border-radius:6px; text-align:center;">
                             <span style="font-size:0.75rem; color:var(--f1-subtext);">RAINFALL</span>
-                            <div style="font-size:1.4rem; font-weight:900; color:#fff;" id="live-rainfall">No</div>
+                            <div style="font-size:1.4rem; font-weight:900; color:#fff;">No</div>
                         </div>
                     </div>
                 </div>
@@ -654,7 +654,7 @@
                     <h3>Fastest Pit Stop Execution Rankings</h3>
                     <table>
                         <thead><tr><th>Pos</th><th>Team</th><th>Driver</th><th>Stop Time</th></tr></thead>
-                        <tbody id="pitstop-body">
+                        <tbody>
                             <tr><td>1</td><td>Red Bull Racing</td><td>VER</td><td><strong>1.98s</strong></td></tr>
                             <tr><td>2</td><td>Ferrari</td><td>LEC</td><td><strong>2.12s</strong></td></tr>
                             <tr><td>3</td><td>McLaren F1</td><td>NOR</td><td><strong>2.24s</strong></td></tr>
@@ -840,7 +840,6 @@
 
         async function fetchCORSData() {
             try {
-                // Fetch Standings via Jolpica (Fully CORS-enabled)
                 const sRes = await fetch('https://api.jolpi.ca/ergast/f1/current/driverstandings.json');
                 const sData = await sRes.json();
                 const drivers = sData.MRData.StandingsTable.StandingsLists[0].DriverStandings;
@@ -865,7 +864,6 @@
                     </tr>
                 `).join('');
 
-                // Constructors
                 const cRes = await fetch('https://api.jolpi.ca/ergast/f1/current/constructorstandings.json');
                 const cData = await cRes.json();
                 const constructors = cData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
@@ -879,7 +877,6 @@
                     </tr>
                 `).join('');
 
-                // Calendar
                 const calRes = await fetch('https://api.jolpi.ca/ergast/f1/current.json');
                 const calData = await calRes.json();
                 const races = calData.MRData.RaceTable.Races;
@@ -1254,6 +1251,7 @@
             const sessions = [
                 { name: "Practice 1", utc: "2026-09-11T11:30:00Z" },
                 { name: "Practice 2", utc: "2026-09-11T15:00:00Z" },
+                { name: "Practice 3", utc: "2026-09-12T10:30:00Z" },
                 { name: "Qualifying", utc: "2026-09-12T14:00:00Z" },
                 { name: "Spanish Grand Prix", utc: "2026-09-13T13:00:00Z" }
             ];
