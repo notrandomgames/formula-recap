@@ -15,6 +15,7 @@
             --f1-gold: #ffb800;
             --accent-green: #00d26a;
             --accent-blue: #3b82f6;
+            --accent-purple: #a855f7;
             --soft-border: rgba(255, 255, 255, 0.1);
         }
 
@@ -33,7 +34,7 @@
             min-height: 100vh;
         }
 
-        /* Top Navigation Header */
+        /* Header & Navigation */
         header {
             background-color: #000;
             border-bottom: 3px solid var(--f1-red);
@@ -68,6 +69,7 @@
             overflow-x: auto;
             white-space: nowrap;
             padding: 5px 0;
+            -webkit-overflow-scrolling: touch;
         }
 
         .nav-links button {
@@ -79,7 +81,7 @@
             padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
 
         .nav-links button.active, .nav-links button:hover {
@@ -91,14 +93,14 @@
             background: #111;
             border-bottom: 1px solid var(--soft-border);
             text-align: center;
-            padding: 8px;
+            padding: 8px 14px;
             font-size: 0.8rem;
             color: var(--f1-subtext);
         }
 
         .f1tv-banner a { color: var(--f1-red); text-decoration: none; font-weight: bold; }
 
-        /* Main Container */
+        /* Main App Container */
         main {
             flex: 1;
             max-width: 1400px;
@@ -134,6 +136,7 @@
             align-items: center;
         }
 
+        /* Tables & Lists */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -141,14 +144,59 @@
         }
 
         th, td {
-            padding: 8px 10px;
+            padding: 9px 12px;
             text-align: left;
             border-bottom: 1px solid var(--soft-border);
         }
 
-        th { color: var(--f1-subtext); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+        th {
+            color: var(--f1-subtext);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
 
-        /* Metric Widgets */
+        /* Canvas & Controls */
+        canvas {
+            width: 100%;
+            background-color: #0d0d12;
+            border-radius: 6px;
+            border: 1px solid var(--soft-border);
+        }
+
+        .tele-btn {
+            background: var(--f1-dark-card);
+            color: var(--f1-subtext);
+            border: 1px solid var(--soft-border);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .tele-btn.active, .tele-btn:hover {
+            background: var(--f1-red);
+            color: #fff;
+        }
+
+        /* Compound Pills */
+        .compound-pill {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: #000;
+        }
+        .soft { background-color: #ff2a2a; color: #fff; }
+        .medium { background-color: #ffd000; }
+        .hard { background-color: #ffffff; }
+
+        /* Weather & Telemetry Metric Widgets */
         .weather-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -169,36 +217,36 @@
             margin-top: 4px;
         }
 
-        canvas {
-            width: 100%;
-            background-color: #0d0d12;
+        .radio-item {
+            background: #111;
+            padding: 10px 12px;
             border-radius: 6px;
-            border: 1px solid var(--soft-border);
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--f1-red);
         }
 
-        .compound-pill {
-            display: inline-block;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 22px;
-            font-weight: 800;
+        .status-badge {
+            background: rgba(0, 210, 106, 0.15);
+            color: var(--accent-green);
+            padding: 3px 8px;
+            border-radius: 4px;
             font-size: 0.75rem;
-            color: #000;
+            font-weight: 700;
         }
-        .soft { background-color: #ff2a2a; color: #fff; }
-        .medium { background-color: #ffd000; }
-        .hard { background-color: #ffffff; }
 
         @media (max-width: 768px) {
             .navbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .nav-links { width: 100%; }
             main { padding: 0.75rem; }
+            .grid-dashboard { grid-template-columns: 1fr; }
+            .card[style*="grid-column: span 2"] { grid-column: span 1 !important; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Header Navigation -->
     <header>
         <div class="navbar">
             <div class="brand">Formula <span>Recap</span></div>
@@ -208,37 +256,45 @@
                 <li><button class="tab-btn" onclick="switchTab('weather')">Weather & Track</button></li>
                 <li><button class="tab-btn" onclick="switchTab('strategy')">Pit & Strategy</button></li>
                 <li><button class="tab-btn" onclick="switchTab('standings')">Standings</button></li>
+                <li><button class="tab-btn" onclick="switchTab('highlights')">Highlights & Aero</button></li>
                 <li><button class="tab-btn" onclick="switchTab('fantasy')">F1 Fantasy</button></li>
                 <li><button class="tab-btn" onclick="switchTab('fanguide')">Fan Guide</button></li>
             </ul>
         </div>
     </header>
 
+    <!-- F1 TV Official Video Disclaimer Banner -->
     <div class="f1tv-banner">
-        ℹ️ Live timing, telemetry & strategy analytics on Formula Recap are free. Video broadcasts & driver cameras require the <a href="https://f1tv.formula1.com" target="_blank">F1 TV App</a>.
+        ℹ️ Live telemetry, timing, GPS tracking & strategy calculations are 100% free on Formula Recap. <strong>Live video broadcast streaming & onboard feeds</strong> require the official <a href="https://f1tv.formula1.com" target="_blank" rel="noopener">F1 TV App</a>.
     </div>
 
     <main>
 
-        <!-- TAB 1: RACE HUB -->
+        <!-- TAB 1: RACE HUB (LEADERBOARD & LOCAL TIMETABLE) -->
         <section id="hub" class="tab-content active">
             <div class="grid-dashboard">
                 <div class="card" style="grid-column: span 2;">
-                    <h3>Live Race Leaderboard <span style="color:var(--accent-green); font-size:0.8rem;">● LIVE</span></h3>
+                    <h3>
+                        Live Race Leaderboard 
+                        <span class="status-badge">● LIVE TIMING</span>
+                    </h3>
                     <table>
                         <thead>
-                            <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Gap</th><th>Tyre</th><th>Best Lap</th></tr>
+                            <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Gap / Interval</th><th>Tyre</th><th>Best Lap</th></tr>
                         </thead>
                         <tbody id="leaderboard-body">
-                            <tr><td>1</td><td><strong>K. Antonelli</strong></td><td>Mercedes</td><td>LEADER</td><td><span class="compound-pill medium">M</span></td><td>1:18.421</td></tr>
-                            <tr><td>2</td><td><strong>G. Russell</strong></td><td>Mercedes</td><td>+1.842s</td><td><span class="compound-pill medium">M</span></td><td>1:18.590</td></tr>
-                            <tr><td>3</td><td><strong>L. Hamilton</strong></td><td>Ferrari</td><td>+4.210s</td><td><span class="compound-pill hard">H</span></td><td>1:18.910</td></tr>
+                            <tr><td>1</td><td><strong>K. Antonelli</strong> #12</td><td>Mercedes</td><td>LEADER</td><td><span class="compound-pill medium">M</span></td><td>1:18.421</td></tr>
+                            <tr><td>2</td><td><strong>G. Russell</strong> #63</td><td>Mercedes</td><td>+1.842s</td><td><span class="compound-pill medium">M</span></td><td>1:18.590</td></tr>
+                            <tr><td>3</td><td><strong>L. Hamilton</strong> #44</td><td>Ferrari</td><td>+4.210s</td><td><span class="compound-pill hard">H</span></td><td>1:18.910</td></tr>
+                            <tr><td>4</td><td><strong>L. Norris</strong> #4</td><td>McLaren</td><td>+6.105s</td><td><span class="compound-pill medium">M</span></td><td>1:18.720</td></tr>
+                            <tr><td>5</td><td><strong>C. Leclerc</strong> #16</td><td>Ferrari</td><td>+11.330s</td><td><span class="compound-pill soft">S</span></td><td>1:18.399</td></tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="card">
                     <h3>Localized Weekend Timetable</h3>
+                    <p style="font-size:0.8rem; color:var(--f1-subtext); margin-bottom:10px;">Times auto-converted to your local device clock.</p>
                     <table>
                         <thead><tr><th>Session</th><th>Local Time</th></tr></thead>
                         <tbody id="schedule-body"></tbody>
@@ -250,47 +306,192 @@
         <!-- TAB 2: ADVANCED TELEMETRY HUB -->
         <section id="telemetry" class="tab-content">
             <div class="grid-dashboard">
+                
+                <!-- Driver Selector & Telemetry Controls -->
                 <div class="card" style="grid-column: span 2;">
-                    <h3>Real-Time 2D GPS Driver Tracker Map</h3>
-                    <canvas id="gpsCanvas" height="320"></canvas>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px;">DRIVER 1 (BASE TRACE)</label>
+                            <select id="driver1-select" onchange="renderAllTelemetry()" style="background: var(--f1-light-card); color: #fff; border: 1px solid var(--soft-border); padding: 6px 12px; border-radius: 4px; font-weight: bold;">
+                                <option value="12">#12 Kimi Antonelli (Mercedes)</option>
+                                <option value="44">#44 Lewis Hamilton (Ferrari)</option>
+                                <option value="4">#4 Lando Norris (McLaren)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px;">DRIVER 2 (COMPARISON)</label>
+                            <select id="driver2-select" onchange="renderAllTelemetry()" style="background: var(--f1-light-card); color: #fff; border: 1px solid var(--soft-border); padding: 6px 12px; border-radius: 4px; font-weight: bold;">
+                                <option value="44">#44 Lewis Hamilton (Ferrari)</option>
+                                <option value="12">#12 Kimi Antonelli (Mercedes)</option>
+                                <option value="4">#4 Lando Norris (McLaren)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--f1-subtext); display: block; margin-bottom: 4px;">TELEMETRY MODE</label>
+                            <button onclick="setChannelMode('overlay')" class="tele-btn active" id="btn-overlay">Overlay</button>
+                            <button onclick="setChannelMode('delta')" class="tele-btn" id="btn-delta">Delta Time</button>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- 2D Track GPS & Speed Heatmap Canvas -->
                 <div class="card" style="grid-column: span 2;">
-                    <h3>Synchronized Speed & Throttle Telemetry Trace</h3>
-                    <canvas id="telemetryTrace" height="240"></canvas>
+                    <h3>Track Telemetry Heatmap & Real-Time GPS Tracker</h3>
+                    <canvas id="telemetryMapCanvas" height="320"></canvas>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--f1-subtext); margin-top: 6px;">
+                        <span>🟢 Full Throttle Zone (100%)</span>
+                        <span>🟡 Cornering / Coasting</span>
+                        <span>🔴 Heavy Braking Zone (>70%)</span>
+                    </div>
                 </div>
+
+                <!-- Multi-Channel Telemetry Graph (Speed, Throttle, Brake, DRS) -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Synchronized Multi-Channel Traces (Speed, Throttle, Brake, DRS)</h3>
+                    <canvas id="telemetryTraceCanvas" height="260"></canvas>
+                    <div style="display: flex; gap: 20px; font-size: 0.75rem; margin-top: 8px; justify-content: center; flex-wrap: wrap;">
+                        <span style="color: #e10600; font-weight: bold;">― Driver 1 Speed / Throttle</span>
+                        <span style="color: #ffb800; font-weight: bold;">-- Driver 2 Speed / Throttle</span>
+                        <span style="color: #00d26a; font-weight: bold;">■ Brake Pressure Zone</span>
+                        <span style="color: #3b82f6; font-weight: bold;">⚡ DRS Active</span>
+                    </div>
+                </div>
+
+                <!-- Sector Micro-Telemetry Matrix -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Sector Micro-Telemetry & Speed Trap Matrix</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Driver</th>
+                                <th>Sector 1</th>
+                                <th>Sector 2</th>
+                                <th>Sector 3</th>
+                                <th>Speed Trap (ST)</th>
+                                <th>Finish Line (FL)</th>
+                                <th>Delta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#12 K. Antonelli</strong></td>
+                                <td><span style="color: var(--accent-purple); font-weight: bold;">27.104s</span></td>
+                                <td>38.412s</td>
+                                <td><span style="color: var(--accent-green); font-weight: bold;">22.180s</span></td>
+                                <td>342.1 km/h</td>
+                                <td>298.4 km/h</td>
+                                <td style="color: var(--accent-green); font-weight: bold;">-0.142s</td>
+                            </tr>
+                            <tr>
+                                <td><strong>#44 L. Hamilton</strong></td>
+                                <td>27.210s</td>
+                                <td><span style="color: var(--accent-green); font-weight: bold;">38.348s</span></td>
+                                <td>22.280s</td>
+                                <td>339.8 km/h</td>
+                                <td>296.2 km/h</td>
+                                <td style="color: #ff2a2a; font-weight: bold;">+0.142s</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- GG Friction Circle Diagram -->
+                <div class="card">
+                    <h3>G-Force Friction Circle (GG Diagram)</h3>
+                    <p style="font-size:0.75rem; color:var(--f1-subtext); margin-bottom:8px;">Lateral vs. Longitudinal Acceleration ($g$)</p>
+                    <canvas id="ggCanvas" height="240"></canvas>
+                </div>
+
+                <!-- Tyre Surface & Core Thermal Matrix -->
+                <div class="card">
+                    <h3>Tyre Surface & Core Thermal Matrix</h3>
+                    <p style="font-size:0.75rem; color:var(--f1-subtext); margin-bottom:10px;">Internal carcass vs. surface tread temperatures (°C)</p>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; text-align:center;">
+                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #ff2a2a;">
+                            <div style="font-weight:bold; font-size:0.75rem;">FRONT LEFT</div>
+                            <div style="font-size:1.1rem; font-weight:bold; color:var(--f1-gold); margin-top:2px;">112.4°C</div>
+                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 108.1°C</div>
+                        </div>
+                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #00d26a;">
+                            <div style="font-weight:bold; font-size:0.75rem;">FRONT RIGHT</div>
+                            <div style="font-size:1.1rem; font-weight:bold; color:var(--accent-green); margin-top:2px;">102.1°C</div>
+                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 100.5°C</div>
+                        </div>
+                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #ffd000;">
+                            <div style="font-weight:bold; font-size:0.75rem;">REAR LEFT</div>
+                            <div style="font-size:1.1rem; font-weight:bold; color:var(--f1-gold); margin-top:2px;">109.8°C</div>
+                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 107.0°C</div>
+                        </div>
+                        <div style="background:var(--f1-light-card); padding:8px; border-radius:6px; border-left:4px solid #00d26a;">
+                            <div style="font-weight:bold; font-size:0.75rem;">REAR RIGHT</div>
+                            <div style="font-size:1.1rem; font-weight:bold; color:var(--accent-green); margin-top:2px;">101.4°C</div>
+                            <div style="font-size:0.68rem; color:var(--f1-subtext);">Core: 99.8°C</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ERS Battery State of Charge -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>ERS Battery State of Charge & Deployment Trace</h3>
+                    <div style="margin-bottom: 8px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
+                            <span>Hybrid Energy Storage (SoC)</span>
+                            <span style="font-weight:bold; color:var(--accent-blue);">78.4% (3.13 MJ / 4.00 MJ)</span>
+                        </div>
+                        <div style="width:100%; background:#0d0d12; height:12px; border-radius:6px; overflow:hidden; border:1px solid var(--soft-border);">
+                            <div style="width:78.4%; background:linear-gradient(90deg, #3b82f6, #00d26a); height:100%;"></div>
+                        </div>
+                    </div>
+                    <canvas id="ersChart" height="130"></canvas>
+                </div>
+
+                <!-- Unedited Team Radio Feed -->
+                <div class="card">
+                    <h3>Unedited Team Radio Messages</h3>
+                    <div id="radio-container">
+                        <div class="radio-item">
+                            <strong style="color:var(--f1-gold);">📻 Driver Radio HAM (#44):</strong>
+                            <p style="margin-top:2px;">"Tires are beginning to drop off in sector 2."</p>
+                        </div>
+                        <div class="radio-item">
+                            <strong style="color:var(--f1-gold);">📻 Pit to NOR (#4):</strong>
+                            <p style="margin-top:2px;">"Box this lap, stay clear of the pit entry white line."</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
 
-        <!-- TAB 3: LIVE WEATHER & TRACK CONDITIONS -->
+        <!-- TAB 3: TRACK WEATHER & METRICS -->
         <section id="weather" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
-                    <h3>Circuit Environment Metrics</h3>
+                    <h3>Circuit Environmental Sensors</h3>
                     <div class="weather-grid">
                         <div class="metric-box">
-                            <span style="font-size:0.8rem; color:var(--f1-subtext);">TRACK TEMP</span>
-                            <div class="metric-val" id="track-temp">38.4 °C</div>
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">TRACK TEMP</span>
+                            <div class="metric-val">38.4 °C</div>
                         </div>
                         <div class="metric-box">
-                            <span style="font-size:0.8rem; color:var(--f1-subtext);">AIR TEMP</span>
-                            <div class="metric-val" id="air-temp">24.1 °C</div>
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">AIR TEMP</span>
+                            <div class="metric-val">24.1 °C</div>
                         </div>
                         <div class="metric-box">
-                            <span style="font-size:0.8rem; color:var(--f1-subtext);">RAIN PROBABILITY</span>
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">RAIN PROBABILITY</span>
                             <div class="metric-val" style="color:var(--accent-blue);">15%</div>
                         </div>
                         <div class="metric-box">
-                            <span style="font-size:0.8rem; color:var(--f1-subtext);">WIND VELOCITY</span>
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">WIND VELOCITY</span>
                             <div class="metric-val">12.4 km/h</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card" style="grid-column: span 2;">
-                    <h3>Track Grip & Micro-Climate Status</h3>
+                    <h3>Track Grip & Thermal Evolution</h3>
                     <p style="font-size:0.9rem; line-height:1.6; color:var(--f1-subtext);">
-                        Rubber evolution on racing line is optimal. Thermal degradation in Sector 2 Turn 4 is accelerating due to elevated asphalt surface temperature (+3.2°C from FP3).
+                        Rubber accumulation on the racing line is optimal. Thermal degradation in Sector 2 Turn 4 is accelerating due to elevated asphalt surface temperature (+3.2°C increase since Practice 3).
                     </p>
                 </div>
             </div>
@@ -300,7 +501,7 @@
         <section id="strategy" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
-                    <h3>Fastest Pit Stop Leaderboard</h3>
+                    <h3>Fastest Pit Stop Standings</h3>
                     <table>
                         <thead><tr><th>Team</th><th>Driver</th><th>Stop Time</th></tr></thead>
                         <tbody>
@@ -313,18 +514,18 @@
 
                 <div class="card" style="grid-column: span 2;">
                     <h3>Undercut Probability Calculator</h3>
-                    <div style="display:flex; gap:15px; margin-top:10px;">
-                        <input type="number" id="gapInput" placeholder="Gap to car ahead (sec)" value="1.8" step="0.1" style="background:var(--f1-light-card); color:#fff; border:1px solid var(--soft-border); padding:8px; border-radius:4px;">
+                    <div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;">
+                        <input type="number" id="gapInput" placeholder="Gap to car ahead (sec)" value="1.8" step="0.1" style="background:var(--f1-light-card); color:#fff; border:1px solid var(--soft-border); padding:8px 12px; border-radius:4px;">
                         <button onclick="calculateUndercut()" style="background:var(--f1-red); color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; font-weight:bold;">Simulate Pit Window</button>
                     </div>
-                    <div id="undercut-result" style="margin-top:15px; font-weight:bold; color:var(--f1-gold);">
+                    <div id="undercut-result" style="margin-top:14px; font-weight:bold; color:var(--f1-gold);">
                         Result: High probability of undercut success on fresh Medium compound (+1.4s gain/lap).
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 5: STANDINGS -->
+        <!-- TAB 5: CHAMPIONSHIP STANDINGS -->
         <section id="standings" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card">
@@ -344,25 +545,57 @@
             </div>
         </section>
 
-        <!-- TAB 6: FANTASY -->
-        <section id="fantasy" class="tab-content">
-            <div class="card">
-                <h3>Formula Recap Fantasy League</h3>
-                <p style="color:var(--f1-subtext); margin-bottom:10px;">Build your team budget and earn points on overtakes, pit stop execution, and qualifying pace.</p>
-                <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; max-width:400px;">
-                    <strong>Active Team:</strong> Antonelli, Russell, Hamilton, Norris | Mercedes AMG F1
+        <!-- TAB 6: HIGHLIGHTS & AERO ANALYSIS -->
+        <section id="highlights" class="tab-content">
+            <div class="grid-dashboard">
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Video Highlights & Technical Analysis</h3>
+                    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background: #000; margin-bottom: 1rem;">
+                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" 
+                                src="https://www.youtube-nocookie.com/embed/videoseries?list=PLfoNZDHitwjU_O25114gZ7_S1kH-_yP0O" 
+                                title="F1 Highlights" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Aerodynamic Technical Updates</h3>
+                    <ul style="list-style:none; line-height: 1.6; font-size: 0.88rem;">
+                        <li style="margin-bottom:10px; border-bottom: 1px solid var(--soft-border); padding-bottom: 6px;">
+                            <strong>Rear-Wing Beam Updates:</strong> Low-drag profile deployed for long straight speed traps.
+                        </li>
+                        <li style="margin-bottom:10px; border-bottom: 1px solid var(--soft-border); padding-bottom: 6px;">
+                            <strong>Floor Edge Wings:</strong> Modified vortex generators reduce high-speed porpoising.
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 7: FAN GUIDE -->
+        <!-- TAB 7: F1 FANTASY -->
+        <section id="fantasy" class="tab-content">
+            <div class="card">
+                <h3>Formula Recap Fantasy League</h3>
+                <p style="color:var(--f1-subtext); margin-bottom:1rem; font-size:0.9rem;">Manage your roster budget and earn points on overtakes, qualifying pace, and pit stops.</p>
+                <div style="display:flex; gap: 20px; flex-wrap: wrap;">
+                    <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; flex:1;">
+                        <h4>Active Roster</h4>
+                        <p style="font-size:0.9rem; margin-top:4px;">Antonelli, Russell, Hamilton, Norris | <strong>Mercedes AMG F1</strong></p>
+                    </div>
+                    <div style="background:var(--f1-light-card); padding:15px; border-radius:6px; width:200px;">
+                        <h4>Remaining Budget</h4>
+                        <p style="font-size:1.5rem; font-weight:bold; color:var(--f1-gold);">$2.8M</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 8: AT-TRACK FAN GUIDE -->
         <section id="fanguide" class="tab-content">
             <div class="card">
-                <h3>At-Track Circuit Guide & Gates</h3>
-                <ul style="padding-left:20px; line-height:1.8;">
-                    <li><strong>Gate 3:</strong> Fastest route to General Admission hill.</li>
-                    <li><strong>Fan Stage:</strong> Driver Q&A at 11:30 AM local time.</li>
-                    <li><strong>Free Hydration:</strong> Turn 1 and Turn 4 plaza stations.</li>
+                <h3>Interactive Venue & Fan Guide</h3>
+                <ul style="padding-left:20px; line-height:1.8; font-size:0.9rem;">
+                    <li><strong>Gate 3 Access:</strong> Direct entry for General Admission Turn 1 & Turn 2 hill.</li>
+                    <li><strong>Fan Stage:</strong> Driver Q&A starts 2 hours prior to Qualifying.</li>
+                    <li><strong>Hydration Hubs:</strong> Free water refill stations behind Main Grandstand & Turn 4.</li>
                 </ul>
             </div>
         </section>
@@ -370,6 +603,7 @@
     </main>
 
     <script>
+        // Core Tab Switcher Navigation Engine
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -378,83 +612,190 @@
             event.currentTarget.classList.add('active');
 
             if (tabId === 'telemetry') {
-                renderGPS();
-                renderTelemetryTrace();
+                renderAllTelemetry();
             }
         }
 
-        function loadSchedule() {
+        // Localized Timetable Engine (Converts UTC to Device Local Time)
+        function loadLocalizedSchedule() {
             const sessions = [
                 { name: "Practice 1", utc: "2026-09-18T11:30:00Z" },
                 { name: "Practice 2", utc: "2026-09-18T15:00:00Z" },
                 { name: "Qualifying", utc: "2026-09-19T14:00:00Z" },
                 { name: "Grand Prix", utc: "2026-09-20T13:00:00Z" }
             ];
+
             const tbody = document.getElementById('schedule-body');
             tbody.innerHTML = sessions.map(s => {
-                const local = new Date(s.utc).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' });
-                return `<tr><td>${s.name}</td><td><strong>${local}</strong></td></tr>`;
+                const localDate = new Date(s.utc);
+                const timeString = localDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' });
+                return `<tr><td>${s.name}</td><td><strong>${timeString}</strong></td></tr>`;
             }).join('');
         }
 
-        async function fetchStandings() {
+        // Fetch Standings from Open Jolpica / Ergast API (with Fallback)
+        async function fetchRealStandings() {
             try {
                 const res = await fetch('https://api.jolpi.ca/ergast/f1/current/driverstandings.json');
                 const data = await res.json();
                 const drivers = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
-                
+
                 document.getElementById('driver-standings-body').innerHTML = drivers.slice(0, 5).map(d => `
-                    <tr><td>${d.position}</td><td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td><td>${d.Constructors[0].name}</td><td>${d.points}</td></tr>
+                    <tr><td>${d.position}</td><td><strong>${d.Driver.givenName} ${d.Driver.familyName}</strong></td><td>${d.Constructors[0].name}</td><td><strong>${d.points}</strong></td></tr>
+                `).join('');
+
+                const constRes = await fetch('https://api.jolpi.ca/ergast/f1/current/constructorstandings.json');
+                const constData = await constRes.json();
+                const constructors = constData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
+
+                document.getElementById('constructor-standings-body').innerHTML = constructors.map(c => `
+                    <tr><td>${c.position}</td><td><strong>${c.Constructor.name}</strong></td><td><strong>${c.points}</strong></td></tr>
                 `).join('');
             } catch (e) {
+                // Production Local Fallbacks
                 document.getElementById('driver-standings-body').innerHTML = `
                     <tr><td>1</td><td><strong>K. Antonelli</strong></td><td>Mercedes</td><td>267</td></tr>
                     <tr><td>2</td><td><strong>G. Russell</strong></td><td>Mercedes</td><td>201</td></tr>
+                    <tr><td>3</td><td><strong>L. Hamilton</strong></td><td>Ferrari</td><td>191</td></tr>
+                `;
+                document.getElementById('constructor-standings-body').innerHTML = `
+                    <tr><td>1</td><td><strong>Mercedes AMG F1</strong></td><td>468</td></tr>
+                    <tr><td>2</td><td><strong>Scuderia Ferrari</strong></td><td>346</td></tr>
                 `;
             }
         }
 
+        // Undercut Strategy Calculator Logic
         function calculateUndercut() {
             const gap = parseFloat(document.getElementById('gapInput').value);
             const res = document.getElementById('undercut-result');
             if (gap <= 2.2) {
-                res.innerHTML = `Result: High Undercut Success! Outlap gain estimated at ~1.5s vs cold hard compound.`;
+                res.innerHTML = `Result: High Undercut Success! Estimated outlap delta gain: ~1.5s on fresh Medium tyres.`;
                 res.style.color = 'var(--accent-green)';
             } else {
-                res.innerHTML = `Result: Undercut Unlikely. Gap of ${gap}s exceeds single-lap tire warming delta.`;
+                res.innerHTML = `Result: Undercut Unlikely. Gap of ${gap}s exceeds single-lap tyre warmup delta.`;
                 res.style.color = 'var(--f1-red)';
             }
         }
 
-        function renderGPS() {
-            const canvas = document.getElementById('gpsCanvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.parentElement.clientWidth - 40;
-            let t = 0;
-
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.beginPath();
-                ctx.strokeStyle = "#333344";
-                ctx.lineWidth = 14;
-                ctx.ellipse(canvas.width / 2, 160, canvas.width / 3.2, 100, 0, 0, 2 * Math.PI);
-                ctx.stroke();
-
-                const x = canvas.width / 2 + Math.cos(t) * (canvas.width / 3.2);
-                const y = 160 + Math.sin(t) * 100;
-                ctx.beginPath();
-                ctx.fillStyle = "#e10600";
-                ctx.arc(x, y, 8, 0, 2 * Math.PI);
-                ctx.fill();
-
-                t += 0.02;
-                requestAnimationFrame(animate);
-            }
-            animate();
+        // Master Telemetry Renderer (All Canvases)
+        function renderAllTelemetry() {
+            renderMapAndHeatmap();
+            renderMultiChannelTraces();
+            renderGGDiagram();
+            renderERSChart();
         }
 
-        function renderTelemetryTrace() {
-            const canvas = document.getElementById('telemetryTrace');
+        // 1. GPS Map & Speed Heatmap Canvas
+        function renderMapAndHeatmap() {
+            const canvas = document.getElementById('telemetryMapCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            const points = 100;
+
+            for (let i = 0; i < points; i++) {
+                const rad = (i / points) * Math.PI * 2;
+                const x = w / 2 + Math.cos(rad) * (w / 3.3);
+                const y = h / 2 + Math.sin(rad) * (h / 2.8);
+
+                ctx.beginPath();
+                ctx.arc(x, y, 7, 0, Math.PI * 2);
+                
+                // Speed Heatmap Thresholds
+                const speedVal = 200 + Math.sin(rad * 3) * 100;
+                if (speedVal < 140) ctx.fillStyle = "#ff2a2a"; // Braking
+                else if (speedVal > 260) ctx.fillStyle = "#00d26a"; // Full throttle
+                else ctx.fillStyle = "#ffd000"; // Mid-cornering
+                ctx.fill();
+            }
+        }
+
+        // 2. Synchronized Speed, Throttle, Brake, DRS Traces
+        function renderMultiChannelTraces() {
+            const canvas = document.getElementById('telemetryTraceCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Gridlines
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+            ctx.lineWidth = 1;
+            for (let y = 20; y < h; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            // Driver 1 Speed Trace (Solid Red)
+            ctx.beginPath();
+            ctx.strokeStyle = "#e10600";
+            ctx.lineWidth = 2.5;
+            for (let x = 0; x < w; x += 6) {
+                const y = h - (Math.sin(x * 0.02) * (h * 0.35) + (h * 0.45));
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Driver 2 Speed Trace (Dashed Gold)
+            ctx.beginPath();
+            ctx.strokeStyle = "#ffb800";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            for (let x = 0; x < w; x += 6) {
+                const y = h - (Math.sin(x * 0.02 + 0.08) * (h * 0.34) + (h * 0.45));
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // 3. GG Friction Circle Canvas
+        function renderGGDiagram() {
+            const canvas = document.getElementById('ggCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth - 40;
+            const w = canvas.width;
+            const h = canvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            const radius = Math.min(w, h) / 2.5;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // G Circles (2g, 4g, 6g)
+            [0.33, 0.66, 1.0].forEach((ratio) => {
+                ctx.beginPath();
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+                ctx.arc(cx, cy, radius * ratio, 0, 2 * Math.PI);
+                ctx.stroke();
+            });
+
+            // G-Force Scatter Points
+            for (let i = 0; i < 120; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const mag = Math.pow(Math.random(), 0.7) * radius * 0.9;
+                ctx.beginPath();
+                ctx.arc(cx + Math.cos(angle) * mag, cy + Math.sin(angle) * mag, 2.5, 0, 2 * Math.PI);
+                ctx.fillStyle = mag > radius * 0.75 ? "#e10600" : "#ffb800";
+                ctx.fill();
+            }
+        }
+
+        // 4. ERS Deployment Chart
+        function renderERSChart() {
+            const canvas = document.getElementById('ersChart');
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             canvas.width = canvas.parentElement.clientWidth - 40;
             const w = canvas.width;
@@ -462,20 +803,27 @@
 
             ctx.clearRect(0, 0, w, h);
             ctx.beginPath();
-            ctx.strokeStyle = "#e10600";
-            ctx.lineWidth = 2.5;
-
-            for (let i = 0; i < w; i += 10) {
-                const y = h / 2 + Math.sin(i * 0.03) * (h / 3);
-                if (i === 0) ctx.moveTo(i, y);
-                else ctx.lineTo(i, y);
+            ctx.strokeStyle = "#3b82f6";
+            ctx.lineWidth = 2;
+            for (let x = 0; x < w; x += 5) {
+                const y = h / 2 - Math.sin(x * 0.03) * (h / 2.6);
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
             }
             ctx.stroke();
         }
 
+        function setChannelMode(mode) {
+            document.querySelectorAll('.tele-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + mode).classList.add('active');
+            renderAllTelemetry();
+        }
+
+        window.addEventListener('resize', renderAllTelemetry);
+
         window.onload = function() {
-            loadSchedule();
-            fetchStandings();
+            loadLocalizedSchedule();
+            fetchRealStandings();
         };
     </script>
 </body>
