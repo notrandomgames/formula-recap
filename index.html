@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formula Recap | Advanced Professional Telemetry & Live Hub</title>
+    <title>Formula Recap | Official Live F1 Hub & Championship Standings</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,700&display=swap');
 
@@ -187,6 +187,14 @@
 
         tbody tr:hover { background-color: var(--f1-light-card); }
 
+        canvas {
+            width: 100%;
+            background-color: #0c0c10;
+            border-radius: 6px;
+            border: 1px solid var(--soft-border);
+            display: block;
+        }
+
         .status-badge {
             background: rgba(0, 210, 106, 0.15);
             color: var(--accent-green);
@@ -214,121 +222,6 @@
             100% { opacity: 1; }
         }
 
-        /* REVAMPED TELEMETRY ENGINE STYLING */
-        .tele-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            background: var(--f1-light-card);
-            padding: 14px;
-            border-radius: 8px;
-            border: 1px solid var(--soft-border);
-            margin-bottom: 1rem;
-            align-items: center;
-        }
-
-        .tele-controls label {
-            font-size: 0.72rem;
-            color: var(--f1-subtext);
-            display: block;
-            margin-bottom: 4px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .tele-controls select {
-            width: 100%;
-            background: var(--f1-dark-card);
-            color: #fff;
-            border: 1px solid var(--soft-border);
-            padding: 7px 10px;
-            border-radius: 5px;
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-
-        .tele-scrubber-container {
-            margin-top: 10px;
-            background: var(--f1-dark-card);
-            padding: 10px 14px;
-            border-radius: 6px;
-            border: 1px solid var(--soft-border);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .tele-scrubber-container input[type=range] {
-            flex: 1;
-            accent-color: var(--f1-red);
-            cursor: pointer;
-        }
-
-        .channel-workspace {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1rem;
-        }
-
-        @media (max-width: 1100px) {
-            .channel-workspace { grid-template-columns: 1fr; }
-        }
-
-        .multi-channel-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .channel-card {
-            background: var(--f1-dark-card);
-            border: 1px solid var(--soft-border);
-            border-radius: 8px;
-            padding: 10px 12px;
-            position: relative;
-        }
-
-        .channel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.78rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: var(--f1-subtext);
-            margin-bottom: 6px;
-        }
-
-        .telemetry-canvas {
-            width: 100%;
-            background-color: #0c0c10;
-            border-radius: 6px;
-            border: 1px solid var(--soft-border);
-            display: block;
-        }
-
-        .tele-matrix-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .tele-metric-box {
-            background: var(--f1-light-card);
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            border: 1px solid var(--soft-border);
-        }
-
-        .tele-metric-val {
-            font-size: 1.35rem;
-            font-weight: 900;
-            color: #fff;
-            margin-top: 2px;
-        }
-
         .race-list-item {
             display: flex;
             align-items: center;
@@ -343,10 +236,9 @@
 
     <header>
         <div class="navbar">
-            <div class="brand">Formula <span>Recap</span> <span class="brand-badge">PRO TELEMETRY</span></div>
+            <div class="brand">Formula <span>Recap</span> <span class="brand-badge"> LIVE HUB</span></div>
             <ul class="nav-links">
                 <li><button class="tab-btn active" onclick="switchTab('hub')">Race Hub</button></li>
-                <li><button class="tab-btn" onclick="switchTab('telemetry')">Advanced Telemetry</button></li>
                 <li><button class="tab-btn" onclick="switchTab('weather')">Weather & Track</button></li>
                 <li><button class="tab-btn" onclick="switchTab('strategy')">Strategy Hub</button></li>
                 <li><button class="tab-btn" onclick="switchTab('standings')">Standings</button></li>
@@ -356,7 +248,7 @@
     </header>
 
     <div class="f1tv-banner">
-        ℹ️ Professional multi-channel telemetry suite for Madrid IFEMA Street Circuit. <strong>Live video broadcast feeds</strong> require the official <a href="https://f1tv.formula1.com" target="_blank" rel="noopener">F1 TV App</a>.
+        ℹ️ Official standings, circuit weather & strategy hub. <strong>Live video broadcast feeds</strong> require the official <a href="https://f1tv.formula1.com" target="_blank" rel="noopener">F1 TV App</a>.
     </div>
 
     <main>
@@ -403,114 +295,7 @@
             </div>
         </section>
 
-        <!-- TAB 2: ADVANCED TELEMETRY SUITE -->
-        <section id="telemetry" class="tab-content">
-            <div class="grid-dashboard">
-                <div class="card" style="grid-column: span 2;">
-                    <div class="tele-controls">
-                        <div>
-                            <label>PRIMARY TRACE (DRIVER 1)</label>
-                            <select id="driver1-select" onchange="renderAdvancedTelemetry()">
-                                <option value="12">#12 Kimi Antonelli (Mercedes) [Green]</option>
-                                <option value="44">#44 Lewis Hamilton (Ferrari) [Red]</option>
-                                <option value="4">#4 Lando Norris (McLaren) [Amber]</option>
-                                <option value="1">#1 Max Verstappen (Red Bull) [Blue]</option>
-                                <option value="16">#16 Charles Leclerc (Ferrari) [Red]</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>COMPARISON TRACE (DRIVER 2)</label>
-                            <select id="driver2-select" onchange="renderAdvancedTelemetry()">
-                                <option value="44">#44 Lewis Hamilton (Ferrari) [Red]</option>
-                                <option value="12">#12 Kimi Antonelli (Mercedes) [Green]</option>
-                                <option value="4">#4 Lando Norris (McLaren) [Amber]</option>
-                                <option value="1">#1 Max Verstappen (Red Bull) [Blue]</option>
-                                <option value="16">#16 Charles Leclerc (Ferrari) [Red]</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>CIRCUIT SECTOR FILTER</label>
-                            <select id="sector-filter" onchange="renderAdvancedTelemetry()">
-                                <option value="full">Full Lap (5.474 km - 22 Turns)</option>
-                                <option value="s1">Sector 1 (Turns 1–6)</option>
-                                <option value="s2">Sector 2 (Turns 7–16 / Banked Curve)</option>
-                                <option value="s3">Sector 3 (Turns 17–22)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="tele-scrubber-container">
-                        <span style="font-size:0.75rem; font-weight:800; color:var(--f1-subtext); text-transform:uppercase;">Lap Distance Scrubber:</span>
-                        <input type="range" id="distanceScrubber" min="0" max="5474" value="1250" oninput="updateDistanceScrubber(this.value)">
-                        <span id="scrubberDistanceVal" style="font-size:0.85rem; font-weight:900; color:var(--f1-gold); min-width:80px;">1,250 m</span>
-                    </div>
-                </div>
-
-                <div class="card" style="grid-column: span 2;">
-                    <div class="channel-workspace">
-                        <div class="multi-channel-container">
-                            <!-- Channel 1: Speed Profile -->
-                            <div class="channel-card">
-                                <div class="channel-header">
-                                    <span>Channel 1: Speed Profile (km/h)</span>
-                                    <span id="live-speed-readout" style="color:#fff; font-weight:900;">312 km/h</span>
-                                </div>
-                                <canvas id="speedChannelCanvas" height="130" class="telemetry-canvas"></canvas>
-                            </div>
-
-                            <!-- Channel 2: Throttle & Brake Applications -->
-                            <div class="channel-card">
-                                <div class="channel-header">
-                                    <span>Channel 2: Throttle (%) vs Brake Pressure</span>
-                                    <span style="color:var(--accent-green);">THROTTLE / <span style="color:#ff2a2a;">BRAKE</span></span>
-                                </div>
-                                <canvas id="throttleBrakeCanvas" height="110" class="telemetry-canvas"></canvas>
-                            </div>
-
-                            <!-- Channel 3: Gear & RPM Delta -->
-                            <div class="channel-card">
-                                <div class="channel-header">
-                                    <span>Channel 3: Transmission Gear & MGU-K Energy Deploy</span>
-                                    <span style="color:var(--f1-gold);" id="live-gear-readout">GEAR 7</span>
-                                </div>
-                                <canvas id="gearRpmCanvas" height="95" class="telemetry-canvas"></canvas>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="card" style="margin-bottom: 12px; padding: 12px;">
-                                <h3>Synchronized Cockpit Telemetry</h3>
-                                <div class="tele-matrix-grid">
-                                    <div class="tele-metric-box">
-                                        <span style="font-size:0.7rem; color:var(--f1-subtext);">LATERAL G</span>
-                                        <div class="tele-metric-val" id="lat-g">3.8 G</div>
-                                    </div>
-                                    <div class="tele-metric-box">
-                                        <span style="font-size:0.7rem; color:var(--f1-subtext);">STEERING ANGLE</span>
-                                        <div class="tele-metric-val" id="steer-angle">-42°</div>
-                                    </div>
-                                    <div class="tele-metric-box">
-                                        <span style="font-size:0.7rem; color:var(--f1-subtext);">TIME DELTA ($\Delta t$)</span>
-                                        <div class="tele-metric-val" style="color:var(--accent-green);" id="delta-val">-0.142s</div>
-                                    </div>
-                                    <div style="background:var(--f1-light-card); padding:10px; border-radius:6px; text-align:center; border:1px solid var(--soft-border);">
-                                        <span style="font-size:0.7rem; color:var(--f1-subtext);">DRS STATUS</span>
-                                        <div class="tele-metric-val" style="color:var(--sector-3-blue); font-size:1.1rem; margin-top:4px;" id="drs-status">ACTIVE</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card" style="padding: 12px;">
-                                <h3>Madrid Circuit Track Map</h3>
-                                <canvas id="madridMiniMap" height="210" class="telemetry-canvas"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 3: WEATHER -->
+        <!-- TAB 2: WEATHER -->
         <section id="weather" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card" style="grid-column: span 2;">
@@ -533,7 +318,7 @@
             </div>
         </section>
 
-        <!-- TAB 4: STRATEGY -->
+        <!-- TAB 3: STRATEGY -->
         <section id="strategy" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card" style="grid-column: span 2;">
@@ -543,7 +328,7 @@
             </div>
         </section>
 
-        <!-- TAB 5: STANDINGS -->
+        <!-- TAB 4: STANDINGS -->
         <section id="standings" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card" style="grid-column: span 2;">
@@ -560,7 +345,7 @@
             </div>
         </section>
 
-        <!-- TAB 6: NEWS -->
+        <!-- TAB 5: NEWS -->
         <section id="news" class="tab-content">
             <div class="grid-dashboard">
                 <div class="card" style="grid-column: span 2;">
@@ -574,28 +359,6 @@
     </main>
 
     <script>
-        const driverColors = {
-            "12": "#00d26a",
-            "44": "#e10600",
-            "4":  "#ffb800",
-            "1":  "#3b82f6",
-            "16": "#e10600"
-        };
-
-        const madridNodes = [
-            { x: 0.18, y: 0.68, dist: 0 },
-            { x: 0.17, y: 0.44, dist: 450 },
-            { x: 0.16, y: 0.36, dist: 800 },
-            { x: 0.20, y: 0.24, dist: 1300 },
-            { x: 0.42, y: 0.12, dist: 2100 },
-            { x: 0.54, y: 0.16, dist: 2700 },
-            { x: 0.70, y: 0.10, dist: 3300 },
-            { x: 0.86, y: 0.13, dist: 3900 },
-            { x: 0.50, y: 0.54, dist: 4600 },
-            { x: 0.32, y: 0.70, dist: 5100 },
-            { x: 0.18, y: 0.68, dist: 5474 }
-        ];
-
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -603,9 +366,7 @@
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
 
-            if (tabId === 'telemetry') {
-                renderAdvancedTelemetry();
-            } else if (tabId === 'weather') {
+            if (tabId === 'weather') {
                 renderWeatherRadar();
             } else if (tabId === 'strategy') {
                 renderTyreDegChart();
@@ -659,201 +420,6 @@
             }
         }
 
-        function updateDistanceScrubber(val) {
-            document.getElementById('scrubberDistanceVal').innerText = `${parseInt(val).toLocaleString()} m`;
-            renderAdvancedTelemetry(parseInt(val));
-        }
-
-        function renderAdvancedTelemetry(scrubberDist = 1250) {
-            const d1Key = document.getElementById('driver1-select').value;
-            const d2Key = document.getElementById('driver2-select').value;
-            const sectorFilter = document.getElementById('sector-filter').value;
-
-            renderSpeedChannel(d1Key, d2Key, sectorFilter, scrubberDist);
-            renderThrottleBrakeChannel(d1Key, d2Key, sectorFilter, scrubberDist);
-            renderGearRpmChannel(d1Key, d2Key, sectorFilter, scrubberDist);
-            renderMiniMap(scrubberDist);
-
-            // Update live cockpit metrics based on scrubber position
-            const simulatedSpeed = Math.floor(110 + Math.sin(scrubberDist * 0.003) * 160 + 80);
-            document.getElementById('live-speed-readout').innerText = `${simulatedSpeed} km/h`;
-            document.getElementById('live-gear-readout').innerText = `GEAR ${simulatedSpeed > 280 ? 8 : simulatedSpeed > 220 ? 7 : simulatedSpeed > 160 ? 5 : 3}`;
-            document.getElementById('lat-g').innerText = `${(Math.sin(scrubberDist * 0.004) * 1.8 + 2.5).toFixed(1)} G`;
-            document.getElementById('steer-angle').innerText = `${Math.floor(Math.cos(scrubberDist * 0.005) * 55)}°`;
-        }
-
-        function renderSpeedChannel(d1, d2, sector, cursorDist) {
-            const canvas = document.getElementById('speedChannelCanvas');
-            if (!canvas) return;
-            canvas.width = canvas.parentElement.clientWidth - 24;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-
-            // Gridlines
-            ctx.strokeStyle = "rgba(255,255,255,0.06)";
-            ctx.lineWidth = 1;
-            for (let y = 20; y < h; y += 30) {
-                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-            }
-
-            // Driver 1 Speed Trace
-            ctx.beginPath();
-            ctx.strokeStyle = driverColors[d1] || '#00d26a';
-            ctx.lineWidth = 2.5;
-            for (let x = 0; x < w; x++) {
-                const distRatio = x / w;
-                const speed = 120 + Math.sin(distRatio * Math.PI * 8) * 110 + Math.cos(distRatio * Math.PI * 4) * 80;
-                const y = h - ((speed / 360) * (h - 20) + 10);
-                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-
-            // Driver 2 Speed Trace (dashed comparison)
-            ctx.beginPath();
-            ctx.strokeStyle = driverColors[d2] || '#e10600';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([3, 3]);
-            for (let x = 0; x < w; x++) {
-                const distRatio = x / w;
-                const speed = 115 + Math.sin(distRatio * Math.PI * 8 + 0.1) * 105 + Math.cos(distRatio * Math.PI * 4) * 85;
-                const y = h - ((speed / 360) * (h - 20) + 10);
-                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // Cursor Line
-            const cursorX = (cursorDist / 5474) * w;
-            ctx.beginPath();
-            ctx.strokeStyle = "#ffb800";
-            ctx.lineWidth = 1.5;
-            ctx.moveTo(cursorX, 0); ctx.lineTo(cursorX, h);
-            ctx.stroke();
-        }
-
-        function renderThrottleBrakeChannel(d1, d2, sector, cursorDist) {
-            const canvas = document.getElementById('throttleBrakeCanvas');
-            if (!canvas) return;
-            canvas.width = canvas.parentElement.clientWidth - 24;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-
-            // Throttle trace (Green)
-            ctx.beginPath();
-            ctx.strokeStyle = "#00d26a";
-            ctx.lineWidth = 2;
-            for (let x = 0; x < w; x++) {
-                const val = Math.max(0, Math.sin((x / w) * Math.PI * 10)) * 100;
-                const y = h - (val / 100) * (h - 10);
-                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-
-            // Brake trace (Red)
-            ctx.beginPath();
-            ctx.strokeStyle = "#ff2a2a";
-            ctx.lineWidth = 2;
-            for (let x = 0; x < w; x++) {
-                const val = Math.max(0, -Math.cos((x / w) * Math.PI * 10)) * 100;
-                const y = h - (val / 100) * (h - 10);
-                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-
-            // Cursor Line
-            const cursorX = (cursorDist / 5474) * w;
-            ctx.beginPath();
-            ctx.strokeStyle = "#ffb800";
-            ctx.lineWidth = 1.5;
-            ctx.moveTo(cursorX, 0); ctx.lineTo(cursorX, h);
-            ctx.stroke();
-        }
-
-        function renderGearRpmChannel(d1, d2, sector, cursorDist) {
-            const canvas = document.getElementById('gearRpmCanvas');
-            if (!canvas) return;
-            canvas.width = canvas.parentElement.clientWidth - 24;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-
-            ctx.beginPath();
-            ctx.strokeStyle = "#ffb800";
-            ctx.lineWidth = 2;
-            for (let x = 0; x < w; x++) {
-                const gear = Math.floor(3 + Math.abs(Math.sin((x / w) * Math.PI * 8)) * 5);
-                const y = h - (gear / 8) * (h - 15);
-                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-
-            // Cursor Line
-            const cursorX = (cursorDist / 5474) * w;
-            ctx.beginPath();
-            ctx.strokeStyle = "#ffb800";
-            ctx.lineWidth = 1.5;
-            ctx.moveTo(cursorX, 0); ctx.lineTo(cursorX, h);
-            ctx.stroke();
-        }
-
-        function renderMiniMap(cursorDist) {
-            const canvas = document.getElementById('madridMiniMap');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.parentElement.clientWidth - 24;
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-
-            // Draw Circuit Track Outline
-            ctx.beginPath();
-            ctx.strokeStyle = "#333342";
-            ctx.lineWidth = 12;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            madridNodes.forEach((pt, i) => {
-                const px = pt.x * w;
-                const py = pt.y * h;
-                if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-            });
-            ctx.stroke();
-
-            // Draw active sector highlights
-            ctx.beginPath();
-            ctx.strokeStyle = "#ff2a85";
-            ctx.lineWidth = 3;
-            madridNodes.forEach((pt, i) => {
-                const px = pt.x * w;
-                const py = pt.y * h;
-                if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-            });
-            ctx.stroke();
-
-            // Draw Car Position Dot based on scrubber distance
-            const ratio = cursorDist / 5474;
-            const nodeIndex = Math.floor(ratio * (madridNodes.length - 1));
-            const currNode = madridNodes[nodeIndex] || madridNodes[0];
-            const carX = currNode.x * w;
-            const carY = currNode.y * h;
-
-            ctx.beginPath();
-            ctx.fillStyle = "#00d26a";
-            ctx.arc(carX, carY, 6, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.strokeStyle = "#fff";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-        }
-
         function renderWeatherRadar() {
             const canvas = document.getElementById('weatherRadarCanvas');
             if (!canvas) return;
@@ -898,11 +464,6 @@
 
         window.onload = function() {
             fetchCORSData();
-            renderAdvancedTelemetry();
-        };
-
-        window.onresize = function() {
-            renderAdvancedTelemetry();
         };
     </script>
 </body>
