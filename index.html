@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formula Recap | Official Madrid Grand Prix Hub & Live Telemetry</title>
+    <title>Formula Recap | Madrid GP Interactive Telemetry Hub</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,700&display=swap');
 
@@ -293,6 +293,42 @@
             border-color: var(--f1-red);
         }
 
+        /* Live Cockpit Telemetry Widgets */
+        .cockpit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .cockpit-card {
+            background: var(--f1-light-card);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--soft-border);
+        }
+
+        .cockpit-val {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 8px;
+            background: #111;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            transition: width 0.1s linear;
+        }
+
         .sector-legend {
             display: flex;
             gap: 16px;
@@ -417,7 +453,7 @@
             </div>
         </section>
 
-        <!-- TAB 2: OFFICIAL MADRID CIRCUIT TELEMETRY ENGINE -->
+        <!-- TAB 2: OFFICIAL MADRID TELEMETRY ENGINE WITH COCKPIT GAUGES -->
         <section id="telemetry" class="tab-content">
             <div class="grid-dashboard">
                 
@@ -447,20 +483,66 @@
                     </div>
                 </div>
 
+                <!-- Live Cockpit Telemetry Widgets -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Live Telemetry Cockpit Dashboard (<span id="active-driver-label">#12 K. Antonelli</span>)</h3>
+                    <div class="cockpit-grid">
+                        <div class="cockpit-card">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">SPEED</span>
+                            <div class="cockpit-val"><span id="live-speed">312</span> <span style="font-size:0.8rem; font-weight:normal;">km/h</span></div>
+                        </div>
+                        <div class="cockpit-card">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">GEAR</span>
+                            <div class="cockpit-val" style="color:var(--f1-gold);" id="live-gear">7</div>
+                        </div>
+                        <div class="cockpit-card">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">THROTTLE</span>
+                            <div class="cockpit-val" style="color:var(--accent-green);" id="live-throttle">94%</div>
+                            <div class="bar-container"><div class="bar-fill" id="throttle-bar" style="width:94%; background:var(--accent-green);"></div></div>
+                        </div>
+                        <div class="cockpit-card">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">BRAKE</span>
+                            <div class="cockpit-val" style="color:#ff2a2a;" id="live-brake">0%</div>
+                            <div class="bar-container"><div class="bar-fill" id="brake-bar" style="width:0%; background:#ff2a2a;"></div></div>
+                        </div>
+                        <div class="cockpit-card">
+                            <span style="font-size:0.75rem; color:var(--f1-subtext);">DRS / OVERTAKE</span>
+                            <div class="cockpit-val" style="color:var(--accent-blue); font-size:1.1rem; margin-top:6px;" id="live-drs">AVAILABLE</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Official Madrid Circuit 2D Canvas Map -->
                 <div class="card" style="grid-column: span 2;">
                     <h3>
                         Official Madrid Street Circuit Layout (22 Turns)
-                        <span style="font-size: 0.8rem; color: var(--f1-subtext);">5.474 km | Sector Colors & Speed Traps</span>
+                        <span style="font-size: 0.8rem; color: var(--f1-subtext);">5.474 km | Sector Colors, Speed Traps & DRS Zones</span>
                     </h3>
-                    <canvas id="madridTrackCanvas" height="420"></canvas>
+                    <canvas id="madridTrackCanvas" height="440"></canvas>
                     
                     <div class="sector-legend">
                         <div class="sector-tag"><span class="sector-dot" style="background:var(--sector-1-pink);"></span> Sector 1 (T1–T6)</div>
                         <div class="sector-tag"><span class="sector-dot" style="background:var(--sector-2-yellow);"></span> Sector 2 (T7–T16)</div>
                         <div class="sector-tag"><span class="sector-dot" style="background:var(--sector-3-blue);"></span> Sector 3 (T17–T22)</div>
+                        <div class="sector-tag"><span style="color:#ff2a85;">🔴 Straight Mode Zone (S1)</span></div>
                         <div class="sector-tag"><span style="color:#00d26a;">🟢 Speed Trap (T4)</span></div>
-                        <div class="sector-tag"><span style="color:var(--f1-gold);">🟡 Overtake Activation (Main Straight)</span></div>
+                        <div class="sector-tag"><span style="color:var(--sector-3-blue);">🔵 Overtake Activation (T22)</span></div>
+                    </div>
+                </div>
+
+                <!-- Interactive Turn Metadata Inspector -->
+                <div class="card" style="grid-column: span 2;">
+                    <h3>Interactive Turn Breakdown Inspector</h3>
+                    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;" id="turn-buttons-container"></div>
+                    <div style="background:var(--f1-light-card); padding:14px; border-radius:8px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:15px;" id="turn-details-box">
+                        <div>
+                            <strong style="color:var(--f1-gold);" id="turn-title">Turn 4 (Speed Trap Sector)</strong>
+                            <div style="font-size:0.85rem; color:var(--f1-subtext); margin-top:4px;" id="turn-desc">High-speed sweeping exit into Sector 1 Straight Mode Zone. Maximum acceleration point.</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.8rem; color:var(--f1-subtext);">Apex Speed: <strong style="color:#fff;" id="turn-speed">295 km/h</strong></div>
+                            <div style="font-size:0.8rem; color:var(--f1-subtext);">Gear: <strong style="color:var(--f1-gold);" id="turn-gear">7th Gear</strong></div>
+                        </div>
                     </div>
                 </div>
 
@@ -552,39 +634,34 @@
     </main>
 
     <script>
-        // Precise 22-Turn Geometry Nodes matching the exact Madrid Track Layout Map
+        // Official 22-Turn Geometry Nodes matching the exact Madrid Track Layout Diagram
         const madridNodes = [
-            // Sector 1 (Pink) - T1 to T6
             { x: 0.18, y: 0.68, num: "SF", sec: 1 },
-            { x: 0.17, y: 0.44, num: "1", sec: 1 },
-            { x: 0.16, y: 0.36, num: "2", sec: 1 },
-            { x: 0.20, y: 0.24, num: "3", sec: 1 },
-            { x: 0.42, y: 0.12, num: "4", sec: 1, st: true }, // Speed Trap
-            { x: 0.49, y: 0.14, num: "5", sec: 1 },
-            { x: 0.51, y: 0.12, num: "5A", sec: 1 },
-            { x: 0.54, y: 0.16, num: "6", sec: 1 },
-
-            // Sector 2 (Yellow) - T7 to T16
-            { x: 0.66, y: 0.10, num: "7", sec: 2 },
-            { x: 0.65, y: 0.15, num: "8", sec: 2 },
-            { x: 0.70, y: 0.10, num: "9", sec: 2 },
-            { x: 0.77, y: 0.08, num: "10", sec: 2 },
-            { x: 0.86, y: 0.13, num: "11", sec: 2 },
-            { x: 0.94, y: 0.22, num: "12", sec: 2 }, // Big loop apex
-            { x: 0.86, y: 0.30, num: "13", sec: 2 },
-            { x: 0.72, y: 0.22, num: "14", sec: 2 },
-            { x: 0.58, y: 0.26, num: "15", sec: 2 },
-            { x: 0.58, y: 0.36, num: "16", sec: 2 },
-
-            // Sector 3 (Blue) - T17 to T22
-            { x: 0.62, y: 0.44, num: "17", sec: 3 },
-            { x: 0.50, y: 0.54, num: "18", sec: 3 },
-            { x: 0.42, y: 0.66, num: "19", sec: 3 },
-            { x: 0.32, y: 0.70, num: "20", sec: 3 },
-            { x: 0.30, y: 0.76, num: "20A", sec: 3 },
-            { x: 0.33, y: 0.84, num: "21", sec: 3, det: true }, // Overtake Detection
-            { x: 0.22, y: 0.84, num: "22", sec: 3 },
-            { x: 0.18, y: 0.78, num: "ACT", sec: 3, act: true }  // Overtake Activation
+            { x: 0.17, y: 0.44, num: "1", sec: 1, speed: "115 km/h", gear: "3rd", desc: "Heavy braking zone entering Turn 1 chicane." },
+            { x: 0.16, y: 0.36, num: "2", sec: 1, speed: "140 km/h", gear: "4th", desc: "Medium-speed right turn connecting to Turn 3 acceleration." },
+            { x: 0.20, y: 0.24, num: "3", sec: 1, speed: "195 km/h", gear: "5th", desc: "Fast left-hander opening onto the Straight Mode Zone." },
+            { x: 0.42, y: 0.12, num: "4", sec: 1, st: true, speed: "344 km/h", gear: "8th", desc: "Speed Trap marker along Sector 1 main straight." },
+            { x: 0.49, y: 0.14, num: "5", sec: 1, speed: "210 km/h", gear: "6th", desc: "Chicane entry zone prior to technical sector." },
+            { x: 0.51, y: 0.12, num: "5A", sec: 1, speed: "180 km/h", gear: "5th", desc: "Tight apex transition." },
+            { x: 0.54, y: 0.16, num: "6", sec: 1, speed: "165 km/h", gear: "4th", desc: "Sector 1 exit corner into Sector 2." },
+            { x: 0.66, y: 0.10, num: "7", sec: 2, speed: "150 km/h", gear: "4th", desc: "Technical Sector 2 entry S-curves." },
+            { x: 0.65, y: 0.15, num: "8", sec: 2, speed: "135 km/h", gear: "3rd", desc: "Tight right apex." },
+            { x: 0.70, y: 0.10, num: "9", sec: 2, speed: "220 km/h", gear: "6th", desc: "Acceleration sweeping curve into Turn 10." },
+            { x: 0.77, y: 0.08, num: "10", sec: 2, speed: "245 km/h", gear: "6th", desc: "Valdebebas Banked Curve entry." },
+            { x: 0.86, y: 0.13, num: "11", sec: 2, speed: "260 km/h", gear: "7th", desc: "High g-force banked curve mid-section." },
+            { x: 0.94, y: 0.22, num: "12", sec: 2, speed: "275 km/h", gear: "7th", desc: "Banked curve exit into technical underpass." },
+            { x: 0.86, y: 0.30, num: "13", sec: 2, speed: "160 km/h", gear: "4th", desc: "Braking zone for underpass chicane." },
+            { x: 0.72, y: 0.22, num: "14", sec: 2, speed: "125 km/h", gear: "3rd", desc: "Tight left hair-pin entry." },
+            { x: 0.58, y: 0.26, num: "15", sec: 2, speed: "175 km/h", gear: "5th", desc: "Traction exit onto intermediate straight." },
+            { x: 0.58, y: 0.36, num: "16", sec: 2, speed: "190 km/h", gear: "5th", desc: "Sector 2 final corner into Sector 3." },
+            { x: 0.62, y: 0.44, num: "17", sec: 3, speed: "145 km/h", gear: "4th", desc: "Sector 3 technical complex entry." },
+            { x: 0.50, y: 0.54, num: "18", sec: 3, speed: "160 km/h", gear: "4th", desc: "Flowing downhill sweeping curve." },
+            { x: 0.42, y: 0.66, num: "19", sec: 3, speed: "170 km/h", gear: "5th", desc: "IFEMA exhibition hall perimeter turn." },
+            { x: 0.32, y: 0.70, num: "20", sec: 3, speed: "110 km/h", gear: "2nd", desc: "Low-speed technical hair-pin entry." },
+            { x: 0.30, y: 0.76, num: "20A", sec: 3, speed: "95 km/h", gear: "2nd", desc: "Tightest apex on the circuit." },
+            { x: 0.33, y: 0.84, num: "21", sec: 3, det: true, speed: "130 km/h", gear: "3rd", desc: "Overtake Detection Zone marker." },
+            { x: 0.22, y: 0.84, num: "22", sec: 3, speed: "185 km/h", gear: "5th", desc: "Final turn leading onto start/finish straight." },
+            { x: 0.18, y: 0.78, num: "ACT", sec: 3, act: true, speed: "290 km/h", gear: "7th", desc: "Overtake / DRS Activation point." }
         ];
 
         const driverProfiles = {
@@ -615,11 +692,34 @@
             renderAllTelemetry();
         }
 
+        function buildTurnButtons() {
+            const container = document.getElementById('turn-buttons-container');
+            container.innerHTML = '';
+            madridNodes.forEach(node => {
+                if(node.num !== 'SF' && node.num !== 'ACT') {
+                    const btn = document.createElement('button');
+                    btn.className = 'tele-btn';
+                    btn.innerText = `T${node.num}`;
+                    btn.onclick = () => inspectTurn(node);
+                    container.appendChild(btn);
+                }
+            });
+        }
+
+        function inspectTurn(node) {
+            document.getElementById('turn-title').innerText = `Turn ${node.num} Details`;
+            document.getElementById('turn-desc').innerText = node.desc || "Circuit turn zone.";
+            document.getElementById('turn-speed').innerText = node.speed || "210 km/h";
+            document.getElementById('turn-gear').innerText = node.gear ? `${node.gear} Gear` : "5th Gear";
+        }
+
         function renderAllTelemetry() {
             if (animFrameId) cancelAnimationFrame(animFrameId);
             const d1Key = document.getElementById('driver1-select').value;
             const d2Key = document.getElementById('driver2-select').value;
             
+            document.getElementById('active-driver-label').innerText = driverProfiles[d1Key].name;
+
             updateMatrix(d1Key, d2Key);
             renderOfficialMadridCanvas(d1Key, d2Key);
             renderTraceCanvas(d1Key, d2Key);
@@ -650,7 +750,7 @@
             `;
         }
 
-        // Render Exact 22-Turn Madrid Track Canvas with Sector Colors
+        // Render Official Madrid Track Canvas with Real Map Annotations & Live Gauges
         function renderOfficialMadridCanvas(d1Key, d2Key) {
             const canvas = document.getElementById('madridTrackCanvas');
             if (!canvas) return;
@@ -659,8 +759,8 @@
             const w = canvas.width;
             const h = canvas.height;
 
-            const padX = 50;
-            const padY = 40;
+            const padX = 60;
+            const padY = 50;
             const mapW = w - padX * 2;
             const mapH = h - padY * 2;
 
@@ -674,7 +774,6 @@
                 act: pt.act
             }));
 
-            // High-density spline interpolation path
             const smoothPath = [];
             const samplesPerSegment = 24;
 
@@ -701,7 +800,7 @@
             function animate() {
                 ctx.clearRect(0, 0, w, h);
 
-                // 1. Draw Thick Track Base Asphalt
+                // 1. Draw Track Asphalt
                 ctx.beginPath();
                 ctx.strokeStyle = "#20202d";
                 ctx.lineWidth = 18;
@@ -713,7 +812,7 @@
                 });
                 ctx.stroke();
 
-                // 2. Draw Sector-Color Racing Lines (Pink, Yellow, Blue)
+                // 2. Draw Sector Color Lines
                 for (let i = 0; i < smoothPath.length - 1; i++) {
                     ctx.beginPath();
                     ctx.moveTo(smoothPath[i].x, smoothPath[i].y);
@@ -726,16 +825,14 @@
                     ctx.stroke();
                 }
 
-                // 3. Draw Track Markers (Speed Trap, Overtake Zone, Turn Numbers)
+                // 3. Draw Track Annotations & Markers
                 canvasPts.forEach((pt) => {
-                    // Turn Number Label
                     if (pt.num !== "SF" && pt.num !== "ACT") {
                         ctx.fillStyle = "#9494a8";
                         ctx.font = "bold 9px sans-serif";
                         ctx.fillText(pt.num, pt.x + 6, pt.y - 4);
                     }
 
-                    // Speed Trap Marker at Turn 4
                     if (pt.st) {
                         ctx.fillStyle = "#00d26a";
                         ctx.beginPath();
@@ -746,15 +843,17 @@
                         ctx.fillText("SPEED TRAP", pt.x - 24, pt.y + 16);
                     }
 
-                    // Overtake Detection Box
                     if (pt.det) {
                         ctx.fillStyle = "#00a2ff";
                         ctx.fillRect(pt.x - 4, pt.y - 4, 8, 8);
+                        ctx.font = "bold 8px sans-serif";
+                        ctx.fillText("DETECTION", pt.x - 20, pt.y + 14);
                     }
                 });
 
-                // 4. Draw Driver 1 Tracking Dot
-                const pos1 = smoothPath[Math.floor(car1Progress)];
+                // 4. Update Driver 1 Positioning & Cockpit Telemetry
+                const pos1Index = Math.floor(car1Progress);
+                const pos1 = smoothPath[pos1Index];
                 if (pos1) {
                     ctx.beginPath();
                     ctx.fillStyle = driverProfiles[d1Key].color;
@@ -763,9 +862,24 @@
                     ctx.fillStyle = "#fff";
                     ctx.font = "bold 10px sans-serif";
                     ctx.fillText(d1Key, pos1.x - 5, pos1.y - 12);
+
+                    // Dynamic Cockpit Gauges Update
+                    const progressRatio = pos1Index / smoothPath.length;
+                    const calculatedSpeed = Math.floor(180 + Math.sin(progressRatio * Math.PI * 6) * 140);
+                    const calculatedGear = calculatedSpeed > 280 ? 8 : calculatedSpeed > 230 ? 7 : calculatedSpeed > 170 ? 5 : 3;
+                    const calculatedThrottle = calculatedSpeed > 220 ? 100 : Math.floor(calculatedSpeed / 2.5);
+                    const calculatedBrake = calculatedThrottle < 30 ? (100 - calculatedThrottle) : 0;
+
+                    document.getElementById('live-speed').innerText = calculatedSpeed;
+                    document.getElementById('live-gear').innerText = calculatedGear;
+                    document.getElementById('live-throttle').innerText = `${calculatedThrottle}%`;
+                    document.getElementById('throttle-bar').style.width = `${calculatedThrottle}%`;
+                    document.getElementById('live-brake').innerText = `${calculatedBrake}%`;
+                    document.getElementById('brake-bar').style.width = `${calculatedBrake}%`;
+                    document.getElementById('live-drs').innerText = (calculatedSpeed > 270) ? "ACTIVE" : "AVAILABLE";
                 }
 
-                // 5. Draw Driver 2 Tracking Dot
+                // 5. Driver 2 Marker
                 const pos2 = smoothPath[Math.floor(car2Progress)];
                 if (pos2) {
                     ctx.beginPath();
@@ -786,7 +900,6 @@
             animate();
         }
 
-        // Trace Canvas Renderer
         function renderTraceCanvas(d1Key, d2Key) {
             const canvas = document.getElementById('telemetryTraceCanvas');
             if (!canvas) return;
@@ -882,6 +995,7 @@
         window.addEventListener('resize', renderAllTelemetry);
 
         window.onload = function() {
+            buildTurnButtons();
             loadLocalizedSchedule();
             fetchRealStandings();
             renderAllTelemetry();
